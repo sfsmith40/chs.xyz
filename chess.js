@@ -33,7 +33,6 @@ var last = function(p) {
 var log = [];
 
 var loggify = function(obj) {
-  console.log(obj)
   var p = obj.piece.type.toLowerCase();
   p = p == 'knight' ? 'N' : p == 'bishop' ? 'B' : p == 'rook' ? 'R' : p == 'queen' ? 'Q' : p == 'king' ? 'K' : '';
 
@@ -925,6 +924,7 @@ var Board = function() {
     }
 
     BoardObj = this;
+    log = [];
   };
 
   this.init();
