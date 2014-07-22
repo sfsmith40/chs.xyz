@@ -173,12 +173,13 @@ $(document).ready(function() {
 
   $(document).on('click', '.board .square.possible-move', function() {
     sq = active_piece.space;
-    if (active_piece.move_to(this.id, false)) {
+    var csl = [active_piece.can_castle('kingside'), active_piece.can_castle('queenside')];
+    if (active_piece.move_to(this.id, false, false)) {
       $('.board .square#' + sq).attr('class', 'square');
       $('.board .square#' + active_piece.space).addClass(active_piece.army + '-' + active_piece.type).addClass('piece');
 
       if (active_piece.type == 'king') {
-        if (active_piece.space.split('')[0] == 'g') {
+        if (active_piece.space.split('')[0] == 'g' && csl[0]) {
 
           $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).attr('class', 'square');
           pce = BoardObj.space_at(last(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).is_occupied;
@@ -187,11 +188,12 @@ $(document).ready(function() {
             $('.board .square#' + last(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('can-move');
           }
 
-        } else if (active_piece.space.split('')[0] == 'c') {
+        } else if (active_piece.space.split('')[0] == 'c' && csl[1]) {
 
           $('.board .square#' + last(last(active_piece.space.split('')[0])) + active_piece.space.split('')[1]).attr('class', 'square');
           pce = BoardObj.space_at(next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).is_occupied;
           $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('piece').addClass(pce.army + '-' + pce.type);
+          console.log(pce)
           if (pce.can_move()) {
             $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('can-move');
           }

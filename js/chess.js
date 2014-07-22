@@ -812,9 +812,9 @@ var Piece = function(type, space, army, board) {
       }
 
       if (this.type == 'king') {
-        if (space.split('')[0] == 'g') {
+        if (space.split('')[0] == 'g' && this.can_castle('kingside')) {
           var castling = 'kingside';
-        } else if (space.split('')[0] == 'c') {
+        } else if (space.split('')[0] == 'c' && this.can_castle('queenside')) {
           var castling = 'queenside';
         }
       } else {
@@ -998,9 +998,9 @@ var Army = function(col, board) {
         [ 'pawn', 'g2' ],
         [ 'pawn', 'h2' ],
         [ 'rook', 'a1' ],
-        [ 'knight', 'b1' ],
-        [ 'bishop', 'c1' ],
-        [ 'queen', 'd1' ],
+        // [ 'knight', 'b1' ],
+        // [ 'bishop', 'c1' ],
+        // [ 'queen', 'd1' ],
         [ 'king', 'e1' ],
         [ 'bishop', 'f1' ],
         [ 'knight', 'g1' ],
@@ -1017,9 +1017,9 @@ var Army = function(col, board) {
         [ 'pawn', 'g7' ],
         [ 'pawn', 'h7' ],
         [ 'rook', 'a8' ],
-        [ 'knight', 'b8' ],
-        [ 'bishop', 'c8' ],
-        [ 'queen', 'd8' ],
+        // [ 'knight', 'b8' ],
+        // [ 'bishop', 'c8' ],
+        // [ 'queen', 'd8' ],
         [ 'king', 'e8' ],
         [ 'bishop', 'f8' ],
         [ 'knight', 'g8' ],
