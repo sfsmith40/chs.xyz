@@ -1,4 +1,9 @@
-@import url(http://fonts.googleapis.com/css?family=Raleway);
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Raleway'), url(../fonts/raleway.woff) format('woff');
+}
 
 /* CSS RESET */
 
@@ -45,8 +50,12 @@ a {
 
 .overlay#opts .modal {
   max-width: 230px;
-  height: 165px;
+  height: 210px;
   overflow: hidden;
+}
+
+.overlay#opts .modal a {
+  color: black !important;
 }
 
 .overlay#opts h3 {
@@ -147,6 +156,18 @@ ol.log {
   background: url('../img/pieces.png') -250px 0;
 }
 
+.white-empress {
+  background: url('../img/pieces.png') -300px 0;
+}
+
+.white-princess {
+  background: url('../img/pieces.png') -350px 0;
+}
+
+.white-unicorn {
+  background: url('../img/pieces.png') -4000px 0;
+}
+
 .black-pawn {
   background: url('../img/pieces.png') 0 50px;
 }
@@ -169,6 +190,18 @@ ol.log {
 
 .black-king {
   background: url('../img/pieces.png') -250px 50px;
+}
+
+.black-empress {
+  background: url('../img/pieces.png') -300px 50px;
+}
+
+.black-princess {
+  background: url('../img/pieces.png') -350px 50px;
+}
+
+.black-unicorn {
+  background: url('../img/pieces.png') -4000px 50px;
 }
 
 .can-move {

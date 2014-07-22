@@ -26,8 +26,8 @@ $(document).ready(function() {
     }
 
     BoardObj = new Board();
-    White = new Army('white', BoardObj);
-    Black = new Army('black', BoardObj);
+    White = new Army('white');
+    Black = new Army('black');
     Turn = BoardObj.turn;
     $('.board').addClass(Turn + '-move');
 
@@ -265,6 +265,10 @@ $(document).ready(function() {
       } else if (!$('input#rotateBoard').is(':checked') && $('style#rotateBoard').length != 0) {
         $('style#rotateBoard').remove();
       }
+    }
+
+    if (this.id == 'playWithFairies') {
+      BoardObj.playing_with_fairies = $('input#playWithFairies').is(':checked');
     }
   })
 });

@@ -466,6 +466,33 @@ var Piece = function(type, space, army, board) {
         ret = ret.concat(bhp[0]).concat(rk[0]);
         cap = cap.concat(bhp[1]).concat(rk[1]);
         gua = gua.concat(bhp[3]).concat(rk[3]);
+
+        break;
+      case 'empress':
+        var knt = this.possible_moves('knight');
+        var rk = this.possible_moves('rook');
+
+        ret = ret.concat(knt[0]).concat(rk[0]);
+        cap = cap.concat(knt[1]).concat(rk[1]);
+        gua = gua.concat(knt[3]).concat(rk[3]);
+
+        break;
+      case 'unicorn':
+        var knt = this.possible_moves('knight');
+        var qun = this.possible_moves('queen');
+
+        ret = ret.concat(knt[0]).concat(qun[0]);
+        cap = cap.concat(knt[1]).concat(qun[1]);
+        gua = gua.concat(knt[3]).concat(qun[3]);
+        break;
+      case 'princess':
+        var knt = this.possible_moves('knight');
+        var bhp = this.possible_moves('bishop');
+
+        ret = ret.concat(knt[0]).concat(bhp[0]);
+        cap = cap.concat(knt[1]).concat(bhp[1]);
+        gua = gua.concat(knt[3]).concat(bhp[3]);
+        break;
       case 'king':
         var uh = h.split()[0];
         var uv = v.split()[0];
@@ -671,12 +698,19 @@ var Piece = function(type, space, army, board) {
         var pawn_promotion = true;
 
         var new_piece;
-        while (isNaN(parseInt(new_piece)) && [0,1,2,3,4].indexOf(parseInt(new_piece)) == -1) {
-          new_piece = prompt('Pawn has reached the king row. Pawn may now be promoted to any of the following pieces (Input corresponding number for choice): \n  - 0: Pawn (stay the same) \n  - 1: Bishop \n  - 2: Knight \n  - 3: Rook \n  - 4: Queen')
+
+        if (BoardObj.playing_with_fairies) {
+          while (isNaN(parseInt(new_piece)) && [0,1,2,3,4,5,6,7].indexOf(parseInt(new_piece)) == -1) {
+            new_piece = prompt('Pawn has reached the king row. Pawn may now be promoted to any of the following pieces (Input corresponding number for choice): \n  - 0: Pawn (stay the same) \n  - 1: Bishop \n  - 2: Knight \n  - 3: Rook \n  - 4: Queen \n  - 5: Empress \n  - 6: Princess \n  - 7: Unicorn')
+          }
+        } else {
+          while (isNaN(parseInt(new_piece)) && [0,1,2,3,4].indexOf(parseInt(new_piece)) == -1) {
+            new_piece = prompt('Pawn has reached the king row. Pawn may now be promoted to any of the following pieces (Input corresponding number for choice): \n  - 0: Pawn (stay the same) \n  - 1: Bishop \n  - 2: Knight \n  - 3: Rook \n  - 4: Queen')
+          }
         }
 
         var old_type = this.type;
-        var new_type = ['pawn', 'bishop', 'knight', 'rook', 'queen'][new_piece];
+        var new_type = ['pawn', 'bishop', 'knight', 'rook', 'queen', 'empress', 'princess', 'unicorn'][new_piece];
 
         this.type = new_type;
       } else {
@@ -823,13 +857,13 @@ var Piece = function(type, space, army, board) {
   this.init();
 };
 
-var Army = function(col, board) {
+var Army = function(col, pieces) {
   this.pieces = [];
   this.in_check = false;
 
   this.init = function() {
     if (col == 'white') {
-      var pieces_init = [
+      var pieces_init = pieces ? pieces : [
         [ 'pawn', 'a2' ],
         [ 'pawn', 'b2' ],
         [ 'pawn', 'c2' ],
@@ -848,7 +882,7 @@ var Army = function(col, board) {
         [ 'rook', 'h1' ],
       ];
     } else if (col == 'black') {
-      var pieces_init = [
+      var pieces_init = pieces ? pieces : [
         [ 'pawn', 'a7' ],
         [ 'pawn', 'b7' ],
         [ 'pawn', 'c7' ],
@@ -874,7 +908,7 @@ var Army = function(col, board) {
     }
     for (var i = 0; i < pieces_init.length; i += 1) {
       p = pieces_init[i];
-      this.pieces.push(new Piece(p[0], p[1], col, board));
+      this.pieces.push(new Piece(p[0], p[1], col, BoardObj));
     }
   };
 
@@ -884,6 +918,7 @@ var Army = function(col, board) {
 var Board = function() {
   this.spaces = [];
   this.turn = 'white';
+  this.playing_with_fairies = false;
 
   this.space_at = function(coor) {
     var h = coor.split('')[0],
