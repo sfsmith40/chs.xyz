@@ -1,4 +1,6 @@
 $(document).ready(function() {
+  $('.overlay').overlay();
+
   var BoardObj;
   var White;
   var Black;
@@ -9,7 +11,9 @@ $(document).ready(function() {
   v.reverse();
 
   var reset = function() {
-    $('body').html('<h1></h1><div class="board"></div><ol class="log"></ol>')
+    $('.chess').html('<div class="board"></div>')
+
+    $('.move').text('');
 
     for (var i = 0; i < v.length; i += 1) {
       var ver = v[i];
@@ -23,7 +27,7 @@ $(document).ready(function() {
     BoardObj = new Board();
     White = new Army('white', BoardObj);
     Black = new Army('black', BoardObj);
-    Turn = 'white';
+    Turn = BoardObj.turn;
     for (var i = 0; i < BoardObj.spaces.length; i += 1) {
       j = BoardObj.spaces[i];
 
@@ -41,7 +45,7 @@ $(document).ready(function() {
     if (k[0]) {
       White.in_check = true;
       $('.white-king').addClass('in-check');
-      $('h1').append(' white in check!');
+      $('.move').append(' white in check!');
 
       if (is_checkmate('white')) {
         if (confirm('checkmate! black wins! play again?')) {
@@ -56,7 +60,7 @@ $(document).ready(function() {
     if (k[1]) {
       Black.in_check = true;
       $('.black-king').addClass('in-check');
-      $('h1').append(' black in check!');
+      $('.move').append(' black in check!');
 
       if (is_checkmate('black')) {
         if (confirm('checkmate! white wins! play again?')) {
@@ -71,10 +75,11 @@ $(document).ready(function() {
 
   var c = function(init) {
     if (!init) {
-      Turn = Turn == 'white' ? 'black' : 'white'; 
+      BoardObj.turn = BoardObj.turn == 'white' ? 'black' : 'white';
+      Turn = BoardObj.turn;
     }
 
-    $('h1').text(Turn + ' to move.');
+    $('.move').text(Turn + ' to move.');
 
     $('.board .square').each(function() { sq = BoardObj.space_at(this.id); sq.is_guarded = []; if (!sq.is_occupied) { $(this).attr('class', 'square'); } })
 
@@ -158,9 +163,7 @@ $(document).ready(function() {
       $('.possible-move').removeClass('possible-move');
       $('.possible-capture').removeClass('possible-capture');
       c();
-    } else {
-      console.log('didnt take piece :/')
-    }
+    } 
   });
 
   $(document).on('click', '.board .square.possible-move', function() {

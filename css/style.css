@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway);
+
 /* CSS RESET */
 
 html,body,blockquote,code,h1,h2,h3,h4,h5,h6,p,pre{margin:0;padding:0}
@@ -13,6 +15,48 @@ strong{font-weight:bold;}
 em{font-style:italic;}
 
 /* END CSS RESET */
+
+body {
+  background: url('../img/dark_wood.png') repeat;
+  font-family: 'Raleway';
+  color: white;
+}
+
+h1 {
+  text-align: center;
+  font-size: 6em;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+a {
+  color: white !important;
+  text-decoration: none;
+}
+
+ol.log {
+  color: black;
+  font-family: monospace;
+  margin-left: 30px;
+}
+
+.meta {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.container {
+  height: 100%;
+  background-color: rgba(100, 100, 100, 0.45);
+}
+
+.board {
+  width: 400px;
+  margin: auto;
+}
 
 .row {
   height: 50px;
@@ -42,51 +86,51 @@ em{font-style:italic;}
 }
 
 .white-pawn {
-  background: url('pieces.png') 0 0;
+  background: url('../img/pieces.png') 0 0;
 }
 
 .white-bishop {
-  background: url('pieces.png') -50px 0;
+  background: url('../img/pieces.png') -50px 0;
 }
 
 .white-knight {
-  background: url('pieces.png') -100px 0;
+  background: url('../img/pieces.png') -100px 0;
 }
 
 .white-rook {
-  background: url('pieces.png') -150px 0;
+  background: url('../img/pieces.png') -150px 0;
 }
 
 .white-queen {
-  background: url('pieces.png') -200px 0;
+  background: url('../img/pieces.png') -200px 0;
 }
 
 .white-king {
-  background: url('pieces.png') -250px 0;
+  background: url('../img/pieces.png') -250px 0;
 }
 
 .black-pawn {
-  background: url('pieces.png') 0 50px;
+  background: url('../img/pieces.png') 0 50px;
 }
 
 .black-bishop {
-  background: url('pieces.png') -50px 50px;
+  background: url('../img/pieces.png') -50px 50px;
 }
 
 .black-knight {
-  background: url('pieces.png') -100px 50px;
+  background: url('../img/pieces.png') -100px 50px;
 }
 
 .black-rook {
-  background: url('pieces.png') -150px 50px;
+  background: url('../img/pieces.png') -150px 50px;
 }
 
 .black-queen {
-  background: url('pieces.png') -200px 50px;
+  background: url('../img/pieces.png') -200px 50px;
 }
 
 .black-king {
-  background: url('pieces.png') -250px 50px;
+  background: url('../img/pieces.png') -250px 50px;
 }
 
 .can-move {
