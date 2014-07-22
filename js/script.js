@@ -1,5 +1,6 @@
 $(document).ready(function() {
-  $('.overlay').overlay();
+  $('.overlay#log').overlay();
+  $('.overlay#opts').overlay();
 
   var BoardObj;
   var White;
@@ -202,4 +203,54 @@ $(document).ready(function() {
       c();
     }
   });
+
+  $(document).on('mouseenter', '.board .square', function() {
+    sq = BoardObj.space_at(this.id);
+
+    sqs = sq.is_guarded;
+
+    for (var i = 0; i < sqs.length; i += 1) {
+      j = sqs[i];
+
+      $('.board .square#' + j.space).addClass('guarding');
+    }
+  });
+
+  $(document).on('mouseleave', '.board .square', function() {
+    $('.guarding').removeClass('guarding');
+  })
+
+  $(document).on('click', '.overlay#opts p input', function() {
+    if (this.id == 'blackGuard') {
+      if ($('input#blackGuard').is(':checked') && $('style#blackGuard').length == 0) {
+        $('body').append('<style id="blackGuard">.black-guarding {background-color: orange !important;}</style>');
+      } else if (!$('input#blackGuard').is(':checked') && $('style#blackGuard').length != 0) {
+        $('style#blackGuard').remove()
+      }
+    }
+
+    if (this.id == 'whiteGuard') {
+      if ($('input#whiteGuard').is(':checked') && $('style#whiteGuard').length == 0) {
+        $('body').append('<style id="whiteGuard">.white-guarding {background-color: purple !important;}</style>');
+      } else if (!$('input#whiteGuard').is(':checked') && $('style#whiteGuard').length != 0) {
+        $('style#whiteGuard').remove()
+      }
+    }
+
+    if (this.id == 'hoverGuard') {
+      if ($('input#hoverGuard').is(':checked') && $('style#hoverGuard').length == 0) {
+        $('body').append('<style id="hoverGuard">.guarding {background-color: green !important;}</style>');
+      } else if (!$('input#hoverGuard').is(':checked') && $('style#hoverGuard').length != 0) {
+        $('style#hoverGuard').remove()
+      }
+    }
+
+    if (this.id == 'canMove') {
+      if ($('input#canMove').is(':checked') && $('style#canMove').length == 0) {
+        $('body').append('<style id="canMove">.can-move {background-color: blue !important;}</style>');
+      } else if (!$('input#canMove').is(':checked') && $('style#canMove').length != 0) {
+        $('style#canMove').remove()
+      }
+    }
+  })
 });

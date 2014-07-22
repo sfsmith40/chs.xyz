@@ -37,6 +37,23 @@ a {
   text-decoration: none;
 }
 
+.overlay#opts {
+  color: black;
+}
+
+.overlay#opts .modal {
+  max-width: 230px;
+  height: 135px;
+}
+
+.overlay#opts h3 {
+  margin-bottom: 10px;
+}
+
+.overlay#opts p {
+  line-height: 25px;
+}
+
 ol.log {
   color: black;
   font-family: monospace;
@@ -135,7 +152,6 @@ ol.log {
 
 .can-move {
   cursor: pointer;
-  /*background-color: blue !important;*/
 }
 
 .possible-move {
@@ -147,11 +163,3 @@ ol.log {
   background-color: blue !important;
   cursor: pointer;
 }
-
-/*.black-guarding {
-  background-color: green !important;
-}
-
-.white-guarding {
-  background-color: purple !important;
-}*/

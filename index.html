@@ -11,7 +11,19 @@
   <body>
   <a href="https://github.com/joahg/chess.js"><img style="position: absolute; top: 0; left: 0; border: 0;" src="img/forkme.png" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png"></a>
 
-  <div class="overlay">
+  <div class="overlay" id="opts">
+    <div class="modal">
+      <h3>Options</h3>
+      <p>
+        <input type="checkbox" id="hoverGuard" name="hoverGuard"> <label for="hoverGuard">Highlight guards on hover</label><br>
+        <input type="checkbox" id="blackGuard" name="blackGuard"> <label for="blackGuard">Highlight all guards (Black)</label><br>
+        <input type="checkbox" id="whiteGuard" name="whiteGuard"> <label for="whiteGuard">Highlight all guards (White)</label><br>
+        <input type="checkbox" id="canMove" name="canMove"> <label for="canMove">Highlight moveable pieces</label>
+      </p>
+    </div>
+  </div>
+
+  <div class="overlay" id="log">
     <div class="modal">
       <ol class="log"></ol>
     </div>
@@ -27,7 +39,7 @@
       </section>
 
       <div class="meta">
-        <a href="https://github.com/joahg/chess.js">{ src }</a> | <a href="http://www.joahg.com/">{ author }</a> | <a data-overlay-trigger href="#!">{ game log }</a>
+        <a href="https://github.com/joahg/chess.js">{ src }</a> | <a href="http://www.joahg.com/">{ author }</a> | <a data-overlay-trigger="log" href="#!">{ game log }</a> | <a data-overlay-trigger="opts" href="#!">{ game options }</a>
       </div> 
     </div>
   </body>
