@@ -33,8 +33,12 @@ var last = function(p) {
 var log = [];
 
 var loggify = function(obj) {
+  console.log(obj)
   var p = obj.piece.type.toLowerCase();
   p = p == 'knight' ? 'N' : p == 'bishop' ? 'B' : p == 'rook' ? 'R' : p == 'queen' ? 'Q' : p == 'king' ? 'K' : '';
+
+  var o = obj.old_type.toLowerCase();
+  o = o == 'knight' ? 'N' : o == 'bishop' ? 'B' : o == 'rook' ? 'R' : o == 'queen' ? 'Q' : o == 'king' ? 'K' : '';
 
   var t = '';
 
@@ -46,14 +50,23 @@ var loggify = function(obj) {
     }
   }
 
-  if (obj.type == 'move') {
-    log.push([p + obj.to + (t), obj]);
-  } else if (obj.type == 'capture') {
-    p = p == '' ? obj.from[0] : p;
-    log.push([p + 'x' + obj.to + (t), obj])
-  } else if (obj.type == 'castle') {
-    p = 'O-O' + (obj.side == 'queenside' ? '-O' : '');
-    log.push([p, obj]);
+  if (obj.pawn_promotion) {
+    if (obj.type == 'move') {
+      log.push([o + obj.to + '=' + p + t, obj])
+    } else if (obj.type == 'capture') {
+      o = o == '' ? obj.from[0] : o;
+      log.push([o + 'x' + obj.to + '=' + p + t, obj])
+    }
+  } else {
+    if (obj.type == 'move') {
+      log.push([p + obj.to + t, obj]);
+    } else if (obj.type == 'capture') {
+      p = p == '' ? obj.from[0] : p;
+      log.push([p + 'x' + obj.to + t, obj])
+    } else if (obj.type == 'castle') {
+      p = 'O-O' + (obj.side == 'queenside' ? '-O' : '');
+      log.push([p, obj]);
+    }
   }
 }
 
@@ -136,7 +149,7 @@ var Piece = function(type, space, army, board) {
 
             break;
           case 'black':
-            if (!BoardObj.space_at(h + (last(v))).is_occupied) {
+            if (last(v) && !BoardObj.space_at(h + (last(v))).is_occupied) {
               ret.push(h + (last(v)))
               if (v == '7' && !BoardObj.space_at(h + (last(last(v)))).is_occupied) { ret.push(h + (last(last(v)))); }
             }
@@ -801,6 +814,22 @@ var Piece = function(type, space, army, board) {
       var ns = space;
 
       this.force_move_to(space);
+
+      if (this.type == 'pawn' && ((this.army == 'white' && ns.split('')[1] == '8') || (this.army == 'black' && ns.split('')[1] == '1'))) {
+        var pawn_promotion = true;
+
+        var new_piece;
+        while (isNaN(parseInt(new_piece)) && [0,1,2,3,4].indexOf(parseInt(new_piece)) == -1) {
+          new_piece = prompt('Pawn has reached the king row. Pawn may now be promoted to any of the following pieces (Input corresponding number for choice): \n  - 0: Pawn (stay the same) \n  - 1: Bishop \n  - 2: Knight \n  - 3: Rook \n  - 4: Queen')
+        }
+
+        var old_type = this.type;
+        var new_type = ['pawn', 'bishop', 'knight', 'rook', 'queen'][new_piece];
+
+        this.type = new_type;
+      } else {
+        var pawn_promotion = false
+      }
       
       var k = kings_in_check();
 
@@ -810,7 +839,6 @@ var Piece = function(type, space, army, board) {
         BoardObj.space_at(last(last(this.space.split('')[0])) + this.space.split('')[1]).is_occupied.force_move_to(next(this.space.split('')[0]) + this.space.split('')[1])
       }
 
-
       if (castling) {
         loggify({
           type: 'castle',
@@ -818,7 +846,9 @@ var Piece = function(type, space, army, board) {
           from: os,
           to: ns,
           piece: this,
-          check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false)
+          check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false),
+          pawn_promotion: pawn_promotion,
+          old_type: (old_type ? old_type : this.type)
         })
       } else if (is_cap) {
         loggify({
@@ -827,7 +857,9 @@ var Piece = function(type, space, army, board) {
           to: ns,
           piece: this,
           cap_piece: is_cap,
-          check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false)
+          check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false),
+          pawn_promotion: pawn_promotion,
+          old_type: (old_type ? old_type : this.type)
         });
       } else {
         loggify({
@@ -835,7 +867,9 @@ var Piece = function(type, space, army, board) {
           from: os,
           to: ns,
           piece: this,
-          check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false)
+          check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false),
+          pawn_promotion: pawn_promotion,
+          old_type: (old_type ? old_type : this)
         });
       }
 
