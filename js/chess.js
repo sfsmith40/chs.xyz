@@ -701,7 +701,7 @@ var Piece = function(type, space, army, board) {
 
         if (BoardObj.playing_with_fairies) {
           while (isNaN(parseInt(new_piece)) && [0,1,2,3,4,5,6,7].indexOf(parseInt(new_piece)) == -1) {
-            new_piece = prompt('Pawn has reached the king row. Pawn may now be promoted to any of the following pieces (Input corresponding number for choice): \n  - 0: Pawn (stay the same) \n  - 1: Bishop \n  - 2: Knight \n  - 3: Rook \n  - 4: Queen \n  - 5: Empress \n  - 6: Princess \n  - 7: Unicorn')
+            new_piece = prompt('Pawn has reached the king row. Pawn may now be promoted to any of the following pieces (Input corresponding number for choice): \n  - 0: Pawn (stay the same) \n  - 1: Bishop \n  - 2: Knight \n  - 3: Rook \n  - 4: Queen \n  - 5: Empress (knight + rook) \n  - 6: Princess (knight + bishop) \n  - 7: Unicorn (knight + queen)')
           }
         } else {
           while (isNaN(parseInt(new_piece)) && [0,1,2,3,4].indexOf(parseInt(new_piece)) == -1) {
