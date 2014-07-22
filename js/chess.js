@@ -43,7 +43,7 @@ var loggify = function(obj) {
 
   if (obj.check) {
     if (is_checkmate((obj.piece.army == 'white' ? 'black' : 'white'))) {
-      t = '++';
+      t = '#';
     } else {
       t = '+';
     }
@@ -65,6 +65,18 @@ var loggify = function(obj) {
     } else if (obj.type == 'castle') {
       p = 'O-O' + (obj.side == 'queenside' ? '-O' : '');
       log.push([p, obj]);
+    }
+  }
+
+  if (is_checkmate((obj.piece.army == 'white' ? 'black' : 'white'))) {
+    if (log.length % 2 == 1) {
+      log.push(['', obj]);
+    }
+
+    if (obj.piece.army == 'white') {
+      log.push(['1-0', obj]);
+    } else if (obj.piece.army == 'black') {
+      log.push(['0-1', obj]);
     }
   }
 }
