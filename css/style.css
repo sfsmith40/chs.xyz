@@ -25,11 +25,13 @@ body {
 h1 {
   text-align: center;
   font-size: 6em;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
 }
 
 a {
@@ -43,7 +45,8 @@ a {
 
 .overlay#opts .modal {
   max-width: 230px;
-  height: 135px;
+  height: 165px;
+  overflow: hidden;
 }
 
 .overlay#opts h3 {
@@ -63,16 +66,34 @@ ol.log {
 .meta {
   text-align: center;
   margin-top: 30px;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
 }
 
 .container {
   height: 100%;
   background-color: rgba(100, 100, 100, 0.45);
+  -webkit-box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  -moz-box-shadow:    0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  box-shadow:         0px 0px 12px 0px rgba(0, 0, 0, 0.74);
 }
 
 .board {
   width: 400px;
   margin: auto;
+  border: 10px solid #111;
+  -webkit-transition: -webkit-transform 0.3s ease-out;
+  -moz-transition:    -moz-transform 0.3s ease-out;
+  -o-transition:      -o-transform 0.3s ease-out;
+  -ms-transition:     -ms-transform 0.3s ease-out;
+  transition:         transform 0.3s ease-out;-webkit-box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  -webkit-box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  -moz-box-shadow:    0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  box-shadow:         0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+}
+
+.board.white-move, .board.white-move .square {
+  -webkit-transform: rotate(0deg); 
+  -moz-transform: rotate(0deg);
 }
 
 .row {

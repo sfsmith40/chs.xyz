@@ -29,6 +29,8 @@ $(document).ready(function() {
     White = new Army('white', BoardObj);
     Black = new Army('black', BoardObj);
     Turn = BoardObj.turn;
+    $('.board').addClass(Turn + '-move');
+
     for (var i = 0; i < BoardObj.spaces.length; i += 1) {
       j = BoardObj.spaces[i];
 
@@ -76,8 +78,10 @@ $(document).ready(function() {
 
   var c = function(init) {
     if (!init) {
+      $('.board').removeClass(Turn + '-move');
       BoardObj.turn = BoardObj.turn == 'white' ? 'black' : 'white';
       Turn = BoardObj.turn;
+      $('.board').addClass(Turn + '-move');
     }
 
     $('.move').text(Turn + ' to move.');
@@ -227,7 +231,7 @@ $(document).ready(function() {
       if ($('input#blackGuard').is(':checked') && $('style#blackGuard').length == 0) {
         $('body').append('<style id="blackGuard">.black-guarding {background-color: orange !important;}</style>');
       } else if (!$('input#blackGuard').is(':checked') && $('style#blackGuard').length != 0) {
-        $('style#blackGuard').remove()
+        $('style#blackGuard').remove();
       }
     }
 
@@ -235,7 +239,7 @@ $(document).ready(function() {
       if ($('input#whiteGuard').is(':checked') && $('style#whiteGuard').length == 0) {
         $('body').append('<style id="whiteGuard">.white-guarding {background-color: purple !important;}</style>');
       } else if (!$('input#whiteGuard').is(':checked') && $('style#whiteGuard').length != 0) {
-        $('style#whiteGuard').remove()
+        $('style#whiteGuard').remove();
       }
     }
 
@@ -243,7 +247,7 @@ $(document).ready(function() {
       if ($('input#hoverGuard').is(':checked') && $('style#hoverGuard').length == 0) {
         $('body').append('<style id="hoverGuard">.guarding {background-color: green !important;}</style>');
       } else if (!$('input#hoverGuard').is(':checked') && $('style#hoverGuard').length != 0) {
-        $('style#hoverGuard').remove()
+        $('style#hoverGuard').remove();
       }
     }
 
@@ -251,7 +255,15 @@ $(document).ready(function() {
       if ($('input#canMove').is(':checked') && $('style#canMove').length == 0) {
         $('body').append('<style id="canMove">.can-move {background-color: blue !important;}</style>');
       } else if (!$('input#canMove').is(':checked') && $('style#canMove').length != 0) {
-        $('style#canMove').remove()
+        $('style#canMove').remove();
+      }
+    }
+
+    if (this.id == 'rotateBoard') {
+      if ($('input#rotateBoard').is(':checked') && $('style#rotateBoard').length == 0) {
+        $('body').append('<style id="rotateBoard">.board.black-move, .board.black-move .square {-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg);}</style>');
+      } else if (!$('input#rotateBoard').is(':checked') && $('style#rotateBoard').length != 0) {
+        $('style#rotateBoard').remove();
       }
     }
   })
