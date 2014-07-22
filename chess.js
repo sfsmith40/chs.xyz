@@ -935,14 +935,14 @@ var Army = function(col, board) {
       ];
     } else if (col == 'black') {
       var pieces_init = [
-        [ 'queen', 'a7' ],
-        [ 'queen', 'b7' ],
-        [ 'queen', 'c7' ],
-        [ 'queen', 'd7' ],
-        [ 'queen', 'e7' ],
-        [ 'queen', 'f7' ],
-        [ 'queen', 'g7' ],
-        [ 'queen', 'h7' ],
+        [ 'pawn', 'a7' ],
+        [ 'pawn', 'b7' ],
+        [ 'pawn', 'c7' ],
+        [ 'pawn', 'd7' ],
+        [ 'pawn', 'e7' ],
+        [ 'pawn', 'f7' ],
+        [ 'pawn', 'g7' ],
+        [ 'pawn', 'h7' ],
         [ 'rook', 'a8' ],
         [ 'knight', 'b8' ],
         [ 'bishop', 'c8' ],
