@@ -122,8 +122,12 @@ $(document).ready(function() {
     check_check();
 
     $('.log').html('');
-    for (var i = 0; i < log.length; i += 2) {
-      $('.log').append('<li>' + log[i][0] + (log[i+1] ? ' ' + log[i+1][0] : '') + '</li>');
+    if (log.length > 0) {
+      for (var i = 0; i < log.length; i += 2) {
+        $('.log').append('<li>' + log[i][0] + (log[i+1] ? ' ' + log[i+1][0] : '') + '</li>');
+      }
+    } else {
+      $('.log').append('no moves.');
     }
   };
 
