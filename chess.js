@@ -869,7 +869,7 @@ var Piece = function(type, space, army, board) {
           piece: this,
           check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false),
           pawn_promotion: pawn_promotion,
-          old_type: (old_type ? old_type : this)
+          old_type: (old_type ? old_type : this.type)
         });
       }
 
