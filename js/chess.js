@@ -126,14 +126,14 @@ var Piece = function(type, space, army, board) {
   this.space = space;
   this.army = army;
 
-  this.possible_moves = function() {
+  this.possible_moves = function(move_as) {
     var ret = [];
     var cap = [];
     var gua = [];
     var h = this.space.split('')[0]; // a-h
     var v = this.space.split('')[1]; // 0-8
 
-    switch (this.type) {
+    switch (move_as ? move_as : this.type) {
       case 'pawn': 
         switch (this.army) {
           case 'white':
@@ -460,171 +460,12 @@ var Piece = function(type, space, army, board) {
 
         break;
       case 'queen':
-        var uh = h.split()[0];
-        var uv = v.split()[0];
+        var bhp = this.possible_moves('bishop');
+        var rk = this.possible_moves('rook');
 
-        while (next(uh) && next(uv)) {
-          var sp = next(uh) + next(uv);
-
-          gua.push(sp);
-
-          if (!BoardObj.space_at(sp).is_occupied) {
-            ret.push(sp);
-          } else if (BoardObj.space_at(sp).is_occupied.army !== this.army) {
-            cap.push(sp);
-            break;
-          } else if (BoardObj.space_at(sp).is_occupied) {
-            break;
-          }
-
-          var uh = next(uh);
-          var uv = next(uv);
-        }
-
-        var uh = h.split()[0];
-        var uv = v.split()[0];
-
-        while (next(uh) && last(uv)) {
-          var sp = next(uh) + last(uv);
-
-          gua.push(sp);
-
-          if (!BoardObj.space_at(sp).is_occupied) {
-            ret.push(sp);
-          } else if (BoardObj.space_at(sp).is_occupied.army !== this.army) {
-            cap.push(sp);
-            break;
-          } else if (BoardObj.space_at(sp).is_occupied) {
-            break;
-          }
-
-          var uh = next(uh);
-          var uv = last(uv);
-        }
-
-        var uh = h.split()[0];
-        var uv = v.split()[0];
-
-        while (last(uh) && next(uv)) {
-          var sp = last(uh) + next(uv);
-
-          gua.push(sp);
-
-          if (!BoardObj.space_at(sp).is_occupied) {
-            ret.push(sp);
-          } else if (BoardObj.space_at(sp).is_occupied.army !== this.army) {
-            cap.push(sp);
-            break;
-          } else if (BoardObj.space_at(sp).is_occupied) {
-            break;
-          }
-
-          var uh = last(uh);
-          var uv = next(uv);
-        }
-
-        var uh = h.split()[0];
-        var uv = v.split()[0];
-
-        while (last(uh) && last(uv)) {
-          var sp = last(uh) + last(uv);
-
-          gua.push(sp);
-
-          if (!BoardObj.space_at(sp).is_occupied) {
-            ret.push(sp);
-          } else if (BoardObj.space_at(sp).is_occupied.army !== this.army) {
-            cap.push(sp);
-            break;
-          } else if (BoardObj.space_at(sp).is_occupied) {
-            break;
-          }
-
-          var uh = last(uh);
-          var uv = last(uv);
-        }
-
-        var uh = h.split('')[0];
-        var uv = v.split('')[0];
-
-        while (next(uv)) {
-          var sp = uh + next(uv);
-
-          gua.push(sp);
-
-          if (!BoardObj.space_at(sp).is_occupied) {
-            ret.push(sp);
-          } else if (BoardObj.space_at(sp).is_occupied.army !== this.army) {
-            cap.push(sp);
-            break;
-          } else if (BoardObj.space_at(sp).is_occupied) {
-            break;
-          }
-
-          var uv = next(uv);
-        }
-
-        var uh = h.split('')[0];
-        var uv = v.split('')[0];
-
-        while (last(uv)) {
-          var sp = uh + last(uv);
-
-          gua.push(sp);
-
-          if (!BoardObj.space_at(sp).is_occupied) {
-            ret.push(sp);
-          } else if (BoardObj.space_at(sp).is_occupied.army !== this.army) {
-            cap.push(sp);
-            break;
-          } else if (BoardObj.space_at(sp).is_occupied) {
-            break;
-          }
-
-          var uv = last(uv);
-        }
-
-        var uh = h.split('')[0];
-        var uv = v.split('')[0];
-
-        while (next(uh)) {
-          var sp = next(uh) + uv;
-
-          gua.push(sp);
-
-          if (!BoardObj.space_at(sp).is_occupied) {
-            ret.push(sp);
-          } else if (BoardObj.space_at(sp).is_occupied.army !== this.army) {
-            cap.push(sp);
-            break;
-          } else if (BoardObj.space_at(sp).is_occupied) {
-            break;
-          }
-
-          var uh = next(uh);
-        }
-
-        var uh = h.split('')[0];
-        var uv = v.split('')[0];
-
-        while (last(uh)) {
-          var sp = last(uh) + uv;
-
-          gua.push(sp);
-
-          if (!BoardObj.space_at(sp).is_occupied) {
-            ret.push(sp);
-          } else if (BoardObj.space_at(sp).is_occupied.army !== this.army) {
-            cap.push(sp);
-            break;
-          } else if (BoardObj.space_at(sp).is_occupied) {
-            break;
-          }
-
-          var uh = last(uh);
-        }
-
-        break;
+        ret = ret.concat(bhp[0]).concat(rk[0]);
+        cap = cap.concat(bhp[1]).concat(rk[1]);
+        gua = gua.concat(bhp[3]).concat(rk[3]);
       case 'king':
         var uh = h.split()[0];
         var uv = v.split()[0];
