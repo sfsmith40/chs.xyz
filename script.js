@@ -76,7 +76,7 @@ $(document).ready(function() {
 
     $('h1').text(Turn + ' to move.');
 
-    $('.board .square').each(function() { sq = BoardObj.space_at(this.id); sq.is_guarded = []; })
+    $('.board .square').each(function() { sq = BoardObj.space_at(this.id); sq.is_guarded = []; if (!sq.is_occupied) { $(this).attr('class', 'square'); } })
 
     $('.board .piece').each(function() {
       pce = BoardObj.space_at(this.id).is_occupied;
@@ -138,11 +138,18 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on('click', '.board .square.piece.possible-capture', function() {
-    captured_piece = BoardObj.space_at(this.id).is_occupied;
+  $(document).on('click', '.board .square.possible-capture', function() {
+    if (active_piece.type == 'pawn' && !BoardObj.space_at(this.id).is_occupied && ((BoardObj.space_at(this.id.split('')[0] + last(this.id.split('')[1])).is_occupied && BoardObj.space_at(this.id.split('')[0] + last(this.id.split('')[1])).is_occupied.type == 'pawn') || (BoardObj.space_at(this.id.split('')[0] + next(this.id.split('')[1])).is_occupied && BoardObj.space_at(this.id.split('')[0] + next(this.id.split('')[1])).is_occupied.type == 'pawn'))) {
+      captured_piece = BoardObj.space_at(this.id.split('')[0] + (active_piece.army == 'white' ? last(this.id.split('')[1]) : next(this.id.split('')[1])));
+      is_en_passant = true;
+    } else {
+      captured_piece = BoardObj.space_at(this.id).is_occupied;
+      is_en_passant = false;
+    }
+
     sq = active_piece.space;
 
-    if (active_piece.takes(captured_piece)) {
+    if (active_piece.takes(this.id, captured_piece, is_en_passant)) {
       $('.board .square#' + sq).attr('class', 'square');
       sq = active_piece.space;
       $('.board .square#' + sq).attr('class', 'square');
@@ -151,6 +158,8 @@ $(document).ready(function() {
       $('.possible-move').removeClass('possible-move');
       $('.possible-capture').removeClass('possible-capture');
       c();
+    } else {
+      console.log('didnt take piece :/')
     }
   });
 

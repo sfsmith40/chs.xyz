@@ -160,6 +160,11 @@ var Piece = function(type, space, army, board) {
             break;
         }
 
+        var ep = this.can_en_passant();
+        if (ep) {
+          cap.push(ep);
+        }
+
         break;
       case 'bishop':
         var uh = h.split()[0];
@@ -737,9 +742,9 @@ var Piece = function(type, space, army, board) {
 
   this.can_take = function(piece) { return this.possible_moves()[1].indexOf(piece.space) > -1; }
 
-  this.takes = function(piece) {
-    if (this.can_take(piece)) {
-      return this.move_to(piece.space, piece)
+  this.takes = function(space, piece, is_en_passant) {
+    if (this.can_take(piece) || (is_en_passant && this.can_move_to(space))) {
+      return this.move_to(space, piece, is_en_passant)
     }
   }
 
@@ -775,8 +780,12 @@ var Piece = function(type, space, army, board) {
     return ret;
   };
 
-  this.move_to = function(space, is_cap) {
+  this.move_to = function(space, is_cap, is_en_passant) {
     if (this.can_move_to(space)) {
+
+      if (is_en_passant && !BoardObj.space_at(space).is_occupied) {
+        BoardObj.space_at(is_cap.is_occupied.space).is_occupied = false;
+      }
 
       if (this.type == 'king') {
         if (space.split('')[0] == 'g') {
@@ -887,6 +896,25 @@ var Piece = function(type, space, army, board) {
             if (!BoardObj.space_at('e8').guarded_by(ar) && !BoardObj.space_at('d8').guarded_by(ar) && !BoardObj.space_at('c8').guarded_by(ar)) {
               return true;
             }
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  this.can_en_passant = function() { 
+    if (this.type == 'pawn' && log.length > 0) {
+      var log_item = log[log.length - 1][1];
+      if (log_item.to.split('')[0] == next(this.space.split('')[0]) || log_item.to.split('')[0] == last(this.space.split('')[0])) {
+        if (this.army == 'white' && this.space.split('')[1] == '5') {
+          if (log_item.piece.type == 'pawn' && log_item.from.split('')[1] == '7' && log_item.to.split('')[1] == '5' && log_item.from.split('')[0] == log_item.to.split('')[0]) {
+            return log_item.from.split('')[0] + next(log_item.to.split('')[1]);
+          }
+        } else if (this.army == 'black' && this.space.split('')[1] == '4') {
+          if (log_item.piece.type == 'pawn' && log_item.from.split('')[1] == '2' && log_item.to.split('')[1] == '4' && log_item.from.split('')[0] == log_item.to.split('')[0]) {
+            return log_item.from.split('')[0] + last(log_item.to.split('')[1]);
           }
         }
       }
