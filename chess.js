@@ -51,6 +51,9 @@ var loggify = function(obj) {
   } else if (obj.type == 'capture') {
     p = p == '' ? obj.from[0] : p;
     log.push([p + 'x' + obj.to + (t), obj])
+  } else if (obj.type == 'castle') {
+    p = 'O-O' + (obj.side == 'queenside' ? '-O' : '');
+    log.push([p, obj]);
   }
 }
 
@@ -710,6 +713,22 @@ var Piece = function(type, space, army, board) {
           }
         }
 
+        if (this.can_castle('kingside')) {
+          if (this.army == 'white') {
+            ret.push('g1');
+          } else if (this.army == 'black') {
+            ret.push('g8');
+          }
+        }
+
+        if (this.can_castle('queenside')) {
+          if (this.army == 'white') {
+            ret.push('c1');
+          } else if (this.army == 'black') {
+            ret.push('c8');
+          }
+        } 
+        
         break;
     }
 
@@ -758,34 +777,40 @@ var Piece = function(type, space, army, board) {
 
   this.move_to = function(space, is_cap) {
     if (this.can_move_to(space)) {
+
+      if (this.type == 'king') {
+        if (space.split('')[0] == 'g') {
+          var castling = 'kingside';
+        } else if (space.split('')[0] == 'c') {
+          var castling = 'queenside';
+        }
+      } else {
+        var castling = false;
+      }
+
       var os = this.space;
       var ns = space;
-      var sps = this.possible_moves()[2];
 
-      BoardObj.space_at(this.space).is_occupied = false;
-      this.space = space;
-      BoardObj.space_at(this.space).is_occupied = this;
-
-      for (var i = 0; i < sps.length; i += 1) {
-        BoardObj.space_at(sps[i]).is_guarded = BoardObj.space_at(sps[i]).is_guarded.filter(function(s){ return s !== this; });
-      }
-
-      var sps = this.possible_moves()[3];
-
-      for (var i = 0; i < sps.length; i += 1) {
-        BoardObj.space_at(sps[i]).is_guarded.push(this);
-      }
+      this.force_move_to(space);
       
       var k = kings_in_check();
 
-      if (!is_cap) {
+      if (castling == 'kingside') {
+        BoardObj.space_at(next(this.space.split('')[0]) + this.space.split('')[1]).is_occupied.force_move_to(last(this.space.split('')[0]) + this.space.split('')[1])
+      } else if (castling == 'queenside') {
+        BoardObj.space_at(last(last(this.space.split('')[0])) + this.space.split('')[1]).is_occupied.force_move_to(next(this.space.split('')[0]) + this.space.split('')[1])
+      }
+
+
+      if (castling) {
         loggify({
-          type: 'move',
+          type: 'castle',
+          side: castling,
           from: os,
           to: ns,
           piece: this,
           check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false)
-        });
+        })
       } else if (is_cap) {
         loggify({
           type: 'capture',
@@ -795,6 +820,14 @@ var Piece = function(type, space, army, board) {
           cap_piece: is_cap,
           check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false)
         });
+      } else {
+        loggify({
+          type: 'move',
+          from: os,
+          to: ns,
+          piece: this,
+          check: (this.army == 'white' ? k[1] : this.army == 'black' ? k[0] : false)
+        });
       }
 
       return true;
@@ -802,6 +835,64 @@ var Piece = function(type, space, army, board) {
       alert('in check. please select a different move.');
       return false;
     }
+  }
+
+  this.force_move_to = function(space) {
+    var sps = this.possible_moves()[2];
+
+    BoardObj.space_at(this.space).is_occupied = false;
+    this.space = space;
+    BoardObj.space_at(this.space).is_occupied = this;
+
+    for (var i = 0; i < sps.length; i += 1) {
+      BoardObj.space_at(sps[i]).is_guarded = BoardObj.space_at(sps[i]).is_guarded.filter(function(s){ return s !== this; });
+    }
+
+    var sps = this.possible_moves()[3];
+
+    for (var i = 0; i < sps.length; i += 1) {
+      BoardObj.space_at(sps[i]).is_guarded.push(this);
+    }
+
+    return true;
+  }
+
+  this.can_castle = function(side) {
+    var ar = this.army == 'white' ? 'black' : 'white';
+
+    if (this.type == 'king') {
+      if (this.army == 'white' && log.filter(function(i) { return (i[1]['to'] == 'e1' || i[1]['from'] == 'e1') }).length == 0) {
+        if (side == 'kingside' && BoardObj.space_at('h1').is_occupied && log.filter(function(i) { return (i[1]['to'] == 'h1' || i[1]['from'] == 'h1') }).length == 0) {
+          if (!BoardObj.space_at('f1').is_occupied && !BoardObj.space_at('g1').is_occupied) {
+            if (!BoardObj.space_at('e1').guarded_by(ar) && !BoardObj.space_at('f1').guarded_by(ar) && !BoardObj.space_at('g1').guarded_by(ar)) {
+              return true;
+            }
+          }
+        } else if (side == 'queenside' && BoardObj.space_at('a1').is_occupied && log.filter(function(i) { return (i[1]['to'] == 'a1' || i[1]['from'] == 'a1') }).length == 0) {
+          if (!BoardObj.space_at('b1').is_occupied && !BoardObj.space_at('c1').is_occupied && !BoardObj.space_at('d1').is_occupied) {
+            if (!BoardObj.space_at('e1').guarded_by(ar) && !BoardObj.space_at('d1').guarded_by(ar) && !BoardObj.space_at('c1').guarded_by(ar)) {
+              return true;
+            }
+          }
+        }
+      } else if (this.army == 'black' && log.filter(function(i) { return (i[1]['to'] == 'e8' || i[1]['from'] == 'e8') }).length == 0) {
+        if (side == 'kingside' && BoardObj.space_at('h8').is_occupied && log.filter(function(i) { return (i[1]['to'] == 'h8' || i[1]['from'] == 'h8') }).length == 0) {
+          if (!BoardObj.space_at('f8').is_occupied && !BoardObj.space_at('g8').is_occupied) {
+            if (!BoardObj.space_at('e8').guarded_by(ar) && !BoardObj.space_at('f8').guarded_by(ar) && !BoardObj.space_at('g8').guarded_by(ar)) {
+              return true;
+            }
+          } 
+        } else if (side == 'queenside' && BoardObj.space_at('a8').is_occupied && log.filter(function(i) { return (i[1]['to'] == 'a8' || i[1]['from'] == 'a8') }).length == 0) {
+          if (!BoardObj.space_at('b8').is_occupied && !BoardObj.space_at('c8').is_occupied && !BoardObj.space_at('d8').is_occupied) {
+            if (!BoardObj.space_at('e8').guarded_by(ar) && !BoardObj.space_at('d8').guarded_by(ar) && !BoardObj.space_at('c8').guarded_by(ar)) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    return false;
   }
 
   this.update_guard = function() {
@@ -844,14 +935,14 @@ var Army = function(col, board) {
       ];
     } else if (col == 'black') {
       var pieces_init = [
-        [ 'pawn', 'a7' ],
-        [ 'pawn', 'b7' ],
-        [ 'pawn', 'c7' ],
-        [ 'pawn', 'd7' ],
-        [ 'pawn', 'e7' ],
-        [ 'pawn', 'f7' ],
-        [ 'pawn', 'g7' ],
-        [ 'pawn', 'h7' ],
+        [ 'queen', 'a7' ],
+        [ 'queen', 'b7' ],
+        [ 'queen', 'c7' ],
+        [ 'queen', 'd7' ],
+        [ 'queen', 'e7' ],
+        [ 'queen', 'f7' ],
+        [ 'queen', 'g7' ],
+        [ 'queen', 'h7' ],
         [ 'rook', 'a8' ],
         [ 'knight', 'b8' ],
         [ 'bishop', 'c8' ],

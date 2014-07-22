@@ -4,13 +4,12 @@ $(document).ready(function() {
   var Black;
   var Turn;
   var active_piece;
+  var h = 'abcdefgh'.split('');
+  var v = '12345678'.split('');
+  v.reverse();
 
   var reset = function() {
     $('body').html('<h1></h1><div class="board"></div><ol class="log"></ol>')
-
-    var h = 'abcdefgh'.split('');
-    var v = '12345678'.split('');
-    v.reverse();
 
     for (var i = 0; i < v.length; i += 1) {
       var ver = v[i];
@@ -42,10 +41,10 @@ $(document).ready(function() {
     if (k[0]) {
       White.in_check = true;
       $('.white-king').addClass('in-check');
-      $('h1').append(' White in check!');
+      $('h1').append(' white in check!');
 
       if (is_checkmate('white')) {
-        if (confirm('Checkmate! Black wins! Play Again?')) {
+        if (confirm('checkmate! black wins! play again?')) {
           reset();
         }
       }
@@ -57,10 +56,10 @@ $(document).ready(function() {
     if (k[1]) {
       Black.in_check = true;
       $('.black-king').addClass('in-check');
-      $('h1').append(' Black in check!');
+      $('h1').append(' black in check!');
 
       if (is_checkmate('black')) {
-        if (confirm('Checkmate! White wins! Play Again?')) {
+        if (confirm('checkmate! white wins! play again?')) {
           reset();
         }
       }
@@ -160,6 +159,27 @@ $(document).ready(function() {
     if (active_piece.move_to(this.id, false)) {
       $('.board .square#' + sq).attr('class', 'square');
       $('.board .square#' + active_piece.space).addClass(active_piece.army + '-' + active_piece.type).addClass('piece');
+
+      if (active_piece.type == 'king') {
+        if (active_piece.space.split('')[0] == 'g') {
+
+          $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).attr('class', 'square');
+          pce = BoardObj.space_at(last(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).is_occupied;
+          $('.board .square#' + last(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('piece').addClass(pce.army + '-' + pce.type);
+          if (pce.can_move()) {
+            $('.board .square#' + last(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('can-move');
+          }
+
+        } else if (active_piece.space.split('')[0] == 'c') {
+
+          $('.board .square#' + last(last(active_piece.space.split('')[0])) + active_piece.space.split('')[1]).attr('class', 'square');
+          pce = BoardObj.space_at(next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).is_occupied;
+          $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('piece').addClass(pce.army + '-' + pce.type);
+          if (pce.can_move()) {
+            $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('can-move');
+          }
+        }
+      }
 
       $('.possible-move').removeClass('possible-move');
       $('.possible-capture').removeClass('possible-capture');
