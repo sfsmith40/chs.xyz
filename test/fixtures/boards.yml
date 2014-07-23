@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  slug: MyString
+  board: MyText
+  players: 1
+
+two:
+  slug: MyString
+  board: MyText
+  players: 1
