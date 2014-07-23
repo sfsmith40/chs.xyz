@@ -1,7 +1,6 @@
 $(document).ready(function() {
   $('.overlay#log').overlay();
   $('.overlay#opts').overlay();
-
   var BoardObj;
   var White;
   var Black;
@@ -11,7 +10,7 @@ $(document).ready(function() {
   var v = '12345678'.split('');
   v.reverse();
 
-  var reset = function() {
+  var reset = function(board) {
     $('.chess').html('<div class="board"></div>')
 
     $('.move').text('');
@@ -25,9 +24,9 @@ $(document).ready(function() {
       }
     }
 
-    BoardObj = new Board();
-    White = new Army('white');
-    Black = new Army('black');
+    BoardObj = board ? board : new Board();
+    White = BoardObj.white;
+    Black = BoardObj.black;
     Turn = BoardObj.turn;
     $('.board').addClass(Turn + '-move');
 
@@ -43,14 +42,14 @@ $(document).ready(function() {
   };
 
   var check_check = function() {
-    var k = kings_in_check();
+    var k = BoardObj.kings_in_check();
 
     if (k[0]) {
       White.in_check = true;
       $('.white-king').addClass('in-check');
       $('.move').append(' white in check!');
 
-      if (is_checkmate('white')) {
+      if (BoardObj.is_checkmate('white')) {
         if (confirm('checkmate! black wins! play again?')) {
           reset();
         }
@@ -65,7 +64,7 @@ $(document).ready(function() {
       $('.black-king').addClass('in-check');
       $('.move').append(' black in check!');
 
-      if (is_checkmate('black')) {
+      if (BoardObj.is_checkmate('black')) {
         if (confirm('checkmate! white wins! play again?')) {
           reset();
         }
@@ -127,9 +126,9 @@ $(document).ready(function() {
     check_check();
 
     $('.log').html('');
-    if (log.length > 0) {
-      for (var i = 0; i < log.length; i += 2) {
-        $('.log').append('<li>' + log[i][0] + (log[i+1] ? ' ' + log[i+1][0] : '') + '</li>');
+    if (BoardObj.log.length > 0) {
+      for (var i = 0; i < BoardObj.log.length; i += 2) {
+        $('.log').append('<li>' + BoardObj.log[i][0] + (BoardObj.log[i+1] ? ' ' + BoardObj.log[i+1][0] : '') + '</li>');
       }
     } else {
       $('.log').append('no moves.');
@@ -153,8 +152,8 @@ $(document).ready(function() {
   });
 
   $(document).on('click', '.board .square.possible-capture', function() {
-    if (active_piece.type == 'pawn' && !BoardObj.space_at(this.id).is_occupied && ((BoardObj.space_at(this.id.split('')[0] + last(this.id.split('')[1])).is_occupied && BoardObj.space_at(this.id.split('')[0] + last(this.id.split('')[1])).is_occupied.type == 'pawn') || (BoardObj.space_at(this.id.split('')[0] + next(this.id.split('')[1])).is_occupied && BoardObj.space_at(this.id.split('')[0] + next(this.id.split('')[1])).is_occupied.type == 'pawn'))) {
-      captured_piece = BoardObj.space_at(this.id.split('')[0] + (active_piece.army == 'white' ? last(this.id.split('')[1]) : next(this.id.split('')[1])));
+    if (active_piece.type == 'pawn' && !BoardObj.space_at(this.id).is_occupied && ((BoardObj.space_at(this.id.split('')[0] + BoardObj.prev(this.id.split('')[1])).is_occupied && BoardObj.space_at(this.id.split('')[0] + BoardObj.prev(this.id.split('')[1])).is_occupied.type == 'pawn') || (BoardObj.space_at(this.id.split('')[0] + BoardObj.next(this.id.split('')[1])).is_occupied && BoardObj.space_at(this.id.split('')[0] + BoardObj.next(this.id.split('')[1])).is_occupied.type == 'pawn'))) {
+      captured_piece = BoardObj.space_at(this.id.split('')[0] + (active_piece.army == 'white' ? BoardObj.prev(this.id.split('')[1]) : BoardObj.next(this.id.split('')[1])));
       is_en_passant = true;
     } else {
       captured_piece = BoardObj.space_at(this.id).is_occupied;
@@ -185,21 +184,21 @@ $(document).ready(function() {
       if (active_piece.type == 'king') {
         if (active_piece.space.split('')[0] == 'g' && csl[0]) {
 
-          $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).attr('class', 'square');
-          pce = BoardObj.space_at(last(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).is_occupied;
-          $('.board .square#' + last(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('piece').addClass(pce.army + '-' + pce.type);
+          $('.board .square#' + BoardObj.next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).attr('class', 'square');
+          pce = BoardObj.space_at(BoardObj.prev(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).is_occupied;
+          $('.board .square#' + BoardObj.prev(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('piece').addClass(pce.army + '-' + pce.type);
           if (pce.can_move()) {
-            $('.board .square#' + last(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('can-move');
+            $('.board .square#' + BoardObj.prev(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('can-move');
           }
 
         } else if (active_piece.space.split('')[0] == 'c' && csl[1]) {
 
-          $('.board .square#' + last(last(active_piece.space.split('')[0])) + active_piece.space.split('')[1]).attr('class', 'square');
-          pce = BoardObj.space_at(next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).is_occupied;
-          $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('piece').addClass(pce.army + '-' + pce.type);
+          $('.board .square#' + BoardObj.prev(BoardObj.prev(active_piece.space.split('')[0])) + active_piece.space.split('')[1]).attr('class', 'square');
+          pce = BoardObj.space_at(BoardObj.next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).is_occupied;
+          $('.board .square#' + BoardObj.next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('piece').addClass(pce.army + '-' + pce.type);
           console.log(pce)
           if (pce.can_move()) {
-            $('.board .square#' + next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('can-move');
+            $('.board .square#' + BoardObj.next(active_piece.space.split('')[0]) + active_piece.space.split('')[1]).addClass('can-move');
           }
         }
       }
