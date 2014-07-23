@@ -1,8 +1,9 @@
+var BoardObj;
+var restore_state;
+
 $(document).ready(function() {
   $('.overlay#log').overlay();
   $('.overlay#opts').overlay();
-
-  var BoardObj;
   var White;
   var Black;
   var Turn;
@@ -28,11 +29,14 @@ $(document).ready(function() {
     restore_state(new Board())
   };
 
-  var restore_state = function(board) {
-    BoardObj = board;
+  restore_state = function(board) {
+    BoardObj = new Board();
+    BoardObj.restore(board);
+
     White = BoardObj.white;
     Black = BoardObj.black;
     Turn = BoardObj.turn;
+    active_piece = undefined;
 
     $('.move').text(Turn + ' to move.');
 
@@ -111,9 +115,9 @@ $(document).ready(function() {
     } else {
       $('.log').append('no moves.');
     }
-  }
 
-  reset();
+    show_possibilities();
+  }
 
   var show_possibilities = function() {
     $('.possible-move').removeClass('possible-move');
@@ -130,6 +134,8 @@ $(document).ready(function() {
       }
     }
   }
+
+  reset();
 
   $(document).on('click', '.board .square.can-move:not(.possible-capture)', function() {
     active_piece = BoardObj.space_at(this.id).is_occupied;

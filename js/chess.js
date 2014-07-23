@@ -1,17 +1,23 @@
 var Board = function() {
-  this.spaces = [];
+  this.spaces = new Array();
   this.turn = 'white';
   this.playing_with_fairies = false;
   this.log = [];
   var BoardObj = this;
 
-  var Space = function(hor, ver) {
+  var Space = function(hor, ver, restore) {
     this.hor = hor;
     this.ver = ver;
     this.is_occupied = false;
     this.is_guarded = [];
 
     this.guarded_by = function(army) { return this.is_guarded.filter(function(a){ return a['army'] == army; }).length > 0; }
+
+    if (restore) {
+      this.hor = restore.hor;
+      this.ver = restore.ver;
+      this.is_guarded = restore.is_guarded;
+    }
   };
 
   var Piece = function(type, space, army, board) {
@@ -890,10 +896,10 @@ var Board = function() {
 
   this.loggify = function(obj) {
     var p = obj.piece.type.toLowerCase();
-    p = p == 'knight' ? 'N' : p == 'bishop' ? 'B' : p == 'rook' ? 'R' : p == 'queen' ? 'Q' : p == 'king' ? 'K' : '';
+    p = p == 'knight' ? 'N' : p == 'bishop' ? 'B' : p == 'rook' ? 'R' : p == 'queen' ? 'Q' : p == 'king' ? 'K' : p == 'empress' ? 'E' : p == 'princess' ? 'P' : p == 'Unicorn' ? 'U' : '';
 
     var o = obj.old_type.toLowerCase();
-    o = o == 'knight' ? 'N' : o == 'bishop' ? 'B' : o == 'rook' ? 'R' : o == 'queen' ? 'Q' : o == 'king' ? 'K' : '';
+    o = o == 'knight' ? 'N' : o == 'bishop' ? 'B' : o == 'rook' ? 'R' : o == 'queen' ? 'Q' : o == 'king' ? 'K' : o == 'empress' ? 'E' : o == 'princess' ? 'P' : o == 'Unicorn' ? 'U' : '';
 
     var t = '';
 
@@ -965,6 +971,28 @@ var Board = function() {
     }
 
     return false;
+  }
+
+  this.restore = function(board) {
+    this.turn = board.turn;
+    this.black = board.black;
+    this.white = board.white
+    this.log = board.log;
+    this.playing_with_fairies = board.playing_with_fairies;
+    this.spaces = [];
+
+    sps = JSON.parse(JSON.stringify(board.spaces))
+    for (var i = 0; i < sps.length; i += 1) {
+      this.spaces.push(new Space('', '', sps[i]));
+      if (sps[i].is_occupied) {
+        var pce = sps[i].is_occupied;
+        this.spaces[i].is_occupied = new Piece(pce.type, pce.space, pce.army, BoardObj);
+      }
+    }    
+  }
+
+  this.export = function() {
+    return JSON.stringify(this);
   }
 
   this.init = function() {

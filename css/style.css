@@ -55,7 +55,13 @@ a {
 }
 
 .overlay#opts .modal a {
-  color: black !important;
+  color: #333 !important;
+  border-bottom: 1px dotted #333;
+}
+
+.overlay#opts .modal a:hover {
+  color: black;
+  border-bottom: 1px solid black;
 }
 
 .overlay#opts h3 {
