@@ -652,6 +652,8 @@ var Board = function() {
           });
         }
 
+        BoardObj.turn = BoardObj.turn == 'white' ? 'black' : 'white';
+
         return true;
       } else {
         alert('in check. please select a different move.');
@@ -729,6 +731,21 @@ var Board = function() {
             if (log_item.piece.type == 'pawn' && log_item.from.split('')[1] == '2' && log_item.to.split('')[1] == '4' && log_item.from.split('')[0] == log_item.to.split('')[0]) {
               return log_item.from.split('')[0] + BoardObj.prev(log_item.to.split('')[1]);
             }
+          }
+        }
+      }
+
+      return false;
+    }
+
+    this.move_is_en_passant = function(space) {
+      if (this.can_en_passant()) {
+        if (!BoardObj.space_at(space).is_occupied) {
+          if ((BoardObj.space_at(space.split('')[0] + BoardObj.prev(space.split('')[1])).is_occupied && 
+               BoardObj.space_at(space.split('')[0] + BoardObj.prev(space.split('')[1])).is_occupied.type == 'pawn') ||
+              (BoardObj.space_at(space.split('')[0] + BoardObj.next(space.split('')[1])).is_occupied &&
+               BoardObj.space_at(space.split('')[0] + BoardObj.next(space.split('')[1])).is_occupied.type == 'pawn')) {
+            return BoardObj.space_at(space.split('')[0] + (this.army == 'white' ? BoardObj.prev(space.split('')[1]) : BoardObj.next(space.split('')[1])));
           }
         }
       }
