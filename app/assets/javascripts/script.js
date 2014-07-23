@@ -4,7 +4,7 @@ var player;
 
 $(document).ready(function() {
 
-  dispatcher = new WebSocketRails('192.241.156.103/websocket');
+  dispatcher = new WebSocketRails(window.location.origin + '/websocket');
   var game_slug = window.location.pathname.split('/')[2];
 
   dispatcher.on_open = function(data) {
