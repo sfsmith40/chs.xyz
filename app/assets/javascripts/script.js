@@ -4,7 +4,7 @@ var player;
 
 $(document).ready(function() {
 
-  dispatcher = new WebSocketRails('chess.joahg.com:3000/websocket');
+  dispatcher = new WebSocketRails('chess.joahg.com/websocket');
   var game_slug = window.location.pathname.split('/')[2];
 
   dispatcher.on_open = function(data) {
