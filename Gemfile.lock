@@ -77,6 +77,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.3.2)
+    redcarpet (3.0.0)
     redis (3.1.0)
     redis-objects (0.9.1)
       redis (>= 3.0.2)
@@ -124,6 +125,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   rails (= 4.0.5)
+  redcarpet
   sqlite3
   turbolinks
   uglifier

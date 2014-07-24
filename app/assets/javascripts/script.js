@@ -199,13 +199,12 @@ $(document).ready(function() {
 
   var update_chat = function(chatObj) {
     console.log(chatObj)
-    $('.chat-log').html('<ul><h2>Chat</h2></ul>');
+    $('.chat .chat-msg, .chat h2').remove();
     for (var i = 0; i < chatObj.included_msgs.length; i += 1) {
       msg = chatObj.included_msgs[i];
-      $('.chat-log ul').append('<li class="' + msg.player + '"><span class="player">' + msg.player + '</span>&nbsp;: ' + msg.text + '</li>');
+      $('.chat-log ul').prepend('<li class="chat-msg ' + msg.player + '"><span class="player">' + msg.player + '</span>&nbsp;: ' + msg.text + '</li>');
     }
-
-    $('.chat-log ul').append('<li><form><input type="text" id="chatMsg" maxlength="40"><a class="send clickable">send</a></form></li>')
+    $('.chat-log ul').prepend('<h2>Chat</h2>')
     $('.chat').scrollTop($('.chat')[0].scrollHeight);
     $('#chatMsg').focus();
   }

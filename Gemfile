@@ -20,3 +20,5 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 
 gem 'websocket-rails'
+
+gem 'redcarpet'

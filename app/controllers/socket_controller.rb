@@ -1,4 +1,5 @@
 require 'json'
+require 'redcarpet'
 
 class SocketController < WebsocketRails::BaseController
   include ActionView::Helpers::SanitizeHelper
@@ -102,14 +103,13 @@ class SocketController < WebsocketRails::BaseController
 
   def new_chat_message
     @board = Board.find_by_slug(controller_store[:board_slug])
+    redcarpet = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new, {fenced_code_blocks: true})
 
     @msg = Chatmsg.new
     @msg.chatlog_id = @board.chatlog.id
-    @msg.player = message[:player]#.gsub(/<\/?[^>]+>/, '')
-    @msg.text = strip_tags(message[:text])
+    @msg.player = message[:player]
+    @msg.text = redcarpet.render(strip_tags(message[:text]))
     @msg.save
-
-    # @chatlog = @board.chatlog.includes(:included_msgs)
 
     broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
   end

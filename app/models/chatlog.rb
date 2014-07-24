@@ -3,6 +3,6 @@ class Chatlog < ActiveRecord::Base
   has_many :chatmsgs
 
   def included_msgs
-    self.chatmsgs.order('created_at DESC').limit(15).reverse
+    self.chatmsgs.order('created_at DESC').limit(15)
   end
 end

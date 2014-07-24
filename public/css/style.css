@@ -191,6 +191,10 @@ ol.log {
   color: black !important;
 }
 
+.chat li.chat-msg p {
+  display: inline;
+}
+
 .row {
   height: 50px;
   width: 400px;
