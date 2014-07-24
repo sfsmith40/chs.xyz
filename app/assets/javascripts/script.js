@@ -4,7 +4,7 @@ var player;
 
 $(document).ready(function() {
 
-  dispatcher = new WebSocketRails('chess.joahg.com:3000/websocket');
+  dispatcher = new WebSocketRails('localhost:3000/websocket');
   var game_slug = window.location.pathname.split('/')[2];
 
   dispatcher.on_open = function(data) {
@@ -22,15 +22,37 @@ $(document).ready(function() {
     }
 
     if (data.player) {
-      console.log(data.player)
-      player = data.player == 1 ? 'white' : data.player == 2 ? 'black' : data.player
+      player = data.player;
       $('.board').attr('class', 'board').addClass(player + '-move');
-      console.log(player)
+    }
+
+    if (data.has_partner !== undefined) {
+      if (!data.has_partner) {
+        $('.connection').text('Waiting for opponent connection...');
+      } else if (data.has_partner) {
+        $('.connection').text('Connected!');
+      }
     }
   });
 
   dispatcher.bind('goto_new_game', function(data) {
     window.location.href = window.location.origin;
+  })
+
+  dispatcher.bind('player_connected', function(data) {
+    if (data.slug == game_slug) {
+      if (data.player !== player) {
+        $('.connection').text('Connected!');
+      }
+    }
+  })
+
+  dispatcher.bind('player_disconnected', function(data) {
+    if (data.slug == game_slug) {
+      if (data.player !== player) {
+        $('.connection').text('Disconnected! Waiting for opponent connection...');
+      }
+    }
   })
 
 

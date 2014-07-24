@@ -11,14 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140723182113) do
+ActiveRecord::Schema.define(version: 20140724021620) do
 
   create_table "boards", force: true do |t|
     t.string   "slug"
     t.text     "board"
-    t.integer  "players"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "has_white_player"
+    t.boolean  "has_black_player"
   end
 
 end
