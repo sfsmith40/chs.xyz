@@ -57,6 +57,18 @@ class SocketController < WebsocketRails::BaseController
     @board.board = message[:board]
     @board.save
 
-    broadcast_message :update_board, { :slug => controller_store[:board], :board => Board.find_by_slug(controller_store[:board]).board.to_json }
+    has_partner = false
+
+    if controller_store[:player] == 'white'
+      if @board.has_black_player
+        has_partner = true
+      end
+    elsif controller_store[:player] == 'black'
+      if @board.has_white_player
+        has_partner = true
+      end
+    end
+
+    broadcast_message :update_board, { :slug => controller_store[:board], :board => Board.find_by_slug(controller_store[:board]).board.to_json, :has_partner => has_partner }
   end
 end
