@@ -5,7 +5,7 @@ var player;
 
 $(document).ready(function() {
 
-  dispatcher = new WebSocketRails('chess.joahg.com:3000/websocket');
+  dispatcher = new WebSocketRails('localhost:3000/websocket');
   var game_slug = window.location.pathname.split('/')[2];
 
   dispatcher.on_open = function(data) {
@@ -198,9 +198,10 @@ $(document).ready(function() {
   reset();
 
   var update_chat = function(chatObj) {
+    console.log(chatObj)
     $('.chat-log').html('<ul><h2>Chat</h2></ul>');
-    for (var i = 0; i < chatObj.chatmsgs.length; i += 1) {
-      msg = chatObj.chatmsgs[i];
+    for (var i = 0; i < chatObj.included_msgs.length; i += 1) {
+      msg = chatObj.included_msgs[i];
       $('.chat-log ul').append('<li class="' + msg.player + '"><span class="player">' + msg.player + '</span>&nbsp;: ' + msg.text + '</li>');
     }
 

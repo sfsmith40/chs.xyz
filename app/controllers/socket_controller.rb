@@ -1,6 +1,8 @@
 require 'json'
 
 class SocketController < WebsocketRails::BaseController
+  include ActionView::Helpers::SanitizeHelper
+
   def initialize_session
     controller_store[:board_slug] = nil
     controller_store[:player] = nil
@@ -25,13 +27,13 @@ class SocketController < WebsocketRails::BaseController
       @board.has_black_player = false
     end
 
+    @board.save
+
     @msg.save
 
-    broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :chatmsgs) }
+    broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
 
     broadcast_message :player_disconnected, { :slug => controller_store[:board_slug], :player => controller_store[:player] }
-
-    @board.save
   end
 
   def set_board
@@ -69,11 +71,11 @@ class SocketController < WebsocketRails::BaseController
       send_message :goto_new_game, {}
     end
 
-    broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :chatmsgs) }
+    @board.save
+
+    broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
 
     broadcast_message :player_connected, { :slug => controller_store[:board_slug], :player => controller_store[:player] }
-
-    @board.save
 
     send_message :update_board, { :slug => controller_store[:board_slug], :board => @board.board.to_json, :player => controller_store[:player], :has_partner => has_partner }
   end
@@ -103,10 +105,12 @@ class SocketController < WebsocketRails::BaseController
 
     @msg = Chatmsg.new
     @msg.chatlog_id = @board.chatlog.id
-    @msg.player = message[:player]
-    @msg.text = message[:text]
+    @msg.player = message[:player]#.gsub(/<\/?[^>]+>/, '')
+    @msg.text = strip_tags(message[:text])
     @msg.save
 
-    broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :chatmsgs) }
+    # @chatlog = @board.chatlog.includes(:included_msgs)
+
+    broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
   end
 end
