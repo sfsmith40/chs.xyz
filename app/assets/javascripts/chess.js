@@ -625,7 +625,7 @@ var Board = function() {
         }
 
         if (castling) {
-          BoardObj.loggify({
+          var logObj = BoardObj.loggify({
             type: 'castle',
             side: castling,
             from: os,
@@ -636,7 +636,7 @@ var Board = function() {
             old_type: (old_type ? old_type : this.type)
           })
         } else if (is_cap) {
-          BoardObj.loggify({
+          var logObj = BoardObj.loggify({
             type: 'capture',
             from: os,
             to: ns,
@@ -647,7 +647,7 @@ var Board = function() {
             old_type: (old_type ? old_type : this.type)
           });
         } else {
-          BoardObj.loggify({
+          var logObj = BoardObj.loggify({
             type: 'move',
             from: os,
             to: ns,
@@ -659,7 +659,7 @@ var Board = function() {
         }
 
         BoardObj.turn = BoardObj.turn == 'white' ? 'black' : 'white';
-        BoardObj.move_callback()
+        BoardObj.move_callback(logObj)
 
         return true;
       } else {
@@ -914,22 +914,24 @@ var Board = function() {
 
     if (obj.pawn_promotion) {
       if (obj.type == 'move') {
-        BoardObj.log.push([o + obj.to + '=' + p + t, obj])
+        var logObj = [o + obj.to + '=' + p + t, obj]
       } else if (obj.type == 'capture') {
         o = o == '' ? obj.from[0] : o;
-        BoardObj.log.push([o + 'x' + obj.to + '=' + p + t, obj])
+        var logObj = [o + 'x' + obj.to + '=' + p + t, obj]
       }
     } else {
       if (obj.type == 'move') {
-        BoardObj.log.push([p + obj.to + t, obj]);
+        var logObj = [p + obj.to + t, obj];
       } else if (obj.type == 'capture') {
         p = p == '' ? obj.from[0] : p;
-        BoardObj.log.push([p + 'x' + obj.to + t, obj])
+       var logObj = [p + 'x' + obj.to + t, obj]
       } else if (obj.type == 'castle') {
         p = 'O-O' + (obj.side == 'queenside' ? '-O' : '');
-        BoardObj.log.push([p, obj]);
+        var logObj = [p, obj];
       }
     }
+
+    BoardObj.log.push(logObj)
 
     if (BoardObj.is_checkmate((obj.piece.army == 'white' ? 'black' : 'white'))) {
       if (BoardObj.log.length % 2 == 1) {
@@ -942,6 +944,8 @@ var Board = function() {
         BoardObj.log.push(['0-1', obj]);
       }
     }
+
+    return logObj;
   }
 
   this.prev = function(p) {
@@ -996,8 +1000,9 @@ var Board = function() {
     return JSON.stringify(this);
   }
 
-  this.move_callback = function() {
+  this.move_callback = function(obj) {
     dispatcher.trigger('update_board', { board: BoardObj.export() })
+    dispatcher.trigger('new_chat_message', { player: 'server', text: obj[1].piece.army + ' made a move: ' + obj[0] });
   }
 
   this.init = function() {

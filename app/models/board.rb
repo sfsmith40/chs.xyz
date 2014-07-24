@@ -2,6 +2,8 @@ class Board < ActiveRecord::Base
 
   before_create :gen_slug
 
+  has_one :chatlog
+
   def to_param
     slug
   end

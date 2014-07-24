@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140724021620) do
+ActiveRecord::Schema.define(version: 20140724185258) do
 
   create_table "boards", force: true do |t|
     t.string   "slug"
@@ -20,6 +20,21 @@ ActiveRecord::Schema.define(version: 20140724021620) do
     t.datetime "updated_at"
     t.boolean  "has_white_player"
     t.boolean  "has_black_player"
+  end
+
+  create_table "chatlogs", force: true do |t|
+    t.integer  "board_id"
+    t.string   "board_slug"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "chatmsgs", force: true do |t|
+    t.integer  "chatlog_id"
+    t.string   "player"
+    t.string   "text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

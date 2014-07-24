@@ -1,10 +1,11 @@
 var BoardObj;
 var restore_state;
 var player;
+  var Turn;
 
 $(document).ready(function() {
 
-  dispatcher = new WebSocketRails('chess.joahg.com:3000/websocket');
+  dispatcher = new WebSocketRails('localhost:3000/websocket');
   var game_slug = window.location.pathname.split('/')[2];
 
   dispatcher.on_open = function(data) {
@@ -12,6 +13,11 @@ $(document).ready(function() {
   }
 
   dispatcher.bind('update_board', function(data) {
+    if (data.player) {
+      player = data.player;
+      $('.board').attr('class', 'board').addClass(player + '-move');
+    }
+
     if (data.slug == game_slug) {
       if (data.board == 'null') {
         dispatcher.trigger('update_board', { board: BoardObj.export() })
@@ -19,11 +25,6 @@ $(document).ready(function() {
         b = data.board;
         restore_state(JSON.parse(JSON.parse(data.board)));
       }
-    }
-
-    if (data.player) {
-      player = data.player;
-      $('.board').attr('class', 'board').addClass(player + '-move');
     }
 
     if (data.has_partner !== undefined) {
@@ -55,13 +56,17 @@ $(document).ready(function() {
     }
   })
 
+  dispatcher.bind('new_chat_message', function(data) {
+    if (data.slug == game_slug) {
+      update_chat(JSON.parse(data.log));
+    }
+  })
 
   $('.overlay#log').overlay();
   $('.overlay#opts').overlay();
   
   var White;
   var Black;
-  var Turn;
   var active_piece;
   var h = 'abcdefgh'.split('');
   var v = '12345678'.split('');
@@ -192,6 +197,32 @@ $(document).ready(function() {
 
   reset();
 
+  var update_chat = function(chatObj) {
+    $('.chat-log').html('<ul><h2>Chat</h2></ul>');
+    for (var i = 0; i < chatObj.chatmsgs.length; i += 1) {
+      msg = chatObj.chatmsgs[i];
+      $('.chat-log ul').append('<li class="' + msg.player + '"><span class="player">' + msg.player + '</span>&nbsp;: ' + msg.text + '</li>');
+    }
+
+    $('.chat-log ul').append('<li><form><input type="text" id="chatMsg" maxlength="40"><a class="send clickable">send</a></form></li>')
+    $('.chat').scrollTop($('.chat')[0].scrollHeight);
+    $('#chatMsg').focus();
+  }
+
+  $(document).on('submit', '.chat form', function(e) {
+    e.preventDefault();
+
+    if ($('#chatMsg').val().length > 0) {
+      dispatcher.trigger('new_chat_message', { player: player, text: $('#chatMsg').val() });
+    }
+
+    $('#chatMsg').val('');
+  });
+
+  $(document).on('click', '.chat a.send', function() {
+    $('.chat form').submit();
+  })
+
   $(document).on('click', '.board .square.can-move:not(.possible-capture)', function() {
     active_piece = BoardObj.space_at(this.id).is_occupied;
     show_possibilities();
@@ -224,6 +255,18 @@ $(document).ready(function() {
       restore_state(BoardObj);
     }
   });
+
+  $(document).on('click', '#hideChat', function() {
+    $('#hideChat').hide();
+    $('.chat').hide();
+    $('#showChat').show();
+  })
+
+  $(document).on('click', '#showChat', function() {
+    $('#showChat').hide();
+    $('.chat').show();
+    $('#hideChat').show();
+  })
 
   $(document).on('mouseenter', '.board .square', function() {
     var sq = BoardObj.space_at(this.id);
@@ -272,14 +315,6 @@ $(document).ready(function() {
         $('style#canMove').remove();
       }
     }
-
-    // if (this.id == 'rotateBoard') {
-    //   if ($('input#rotateBoard').is(':checked') && $('style#rotateBoard').length == 0) {
-    //     $('body').append('<style id="rotateBoard"></style>');
-    //   } else if (!$('input#rotateBoard').is(':checked') && $('style#rotateBoard').length != 0) {
-    //     $('style#rotateBoard').remove();
-    //   }
-    // }
 
     if (this.id == 'playWithFairies') {
       BoardObj.playing_with_fairies = $('input#playWithFairies').is(':checked');

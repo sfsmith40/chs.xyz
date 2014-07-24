@@ -38,12 +38,16 @@
 
       <h4 class="connection"></h4>
 
-      <section class="chess">
-
+      <section class="game">
+        <section class="chess"></section>
+        <section class="chat">
+          <div class="chat-log">
+          </div>
+        </section>
       </section>
 
       <div class="meta">
-        <a href="https://github.com/joahg/chess.js">{ src }</a> | <a href="http://www.joahg.com/">{ author }</a> | <a data-overlay-trigger="log" href="#!">{ game log }</a> | <a data-overlay-trigger="opts" href="#!">{ game options }</a>
+        <a href="https://github.com/joahg/chess.js">{ src }</a> | <a href="http://www.joahg.com/">{ author }</a> | <a data-overlay-trigger="log" class="clickable">{ game log }</a> | <a data-overlay-trigger="opts" class="clickable">{ game options }</a> | <a id="hideChat" class="clickable">{ hide chat }</a><a id="showChat" class="clickable">{ show chat }</a>
       </div> 
     </div>
   </body>

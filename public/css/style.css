@@ -48,6 +48,10 @@ a {
   text-decoration: none;
 }
 
+a.clickable {
+  cursor: pointer;
+}
+
 .overlay#opts {
   color: black;
 }
@@ -97,6 +101,16 @@ ol.log {
   box-shadow:         0px 0px 12px 0px rgba(0, 0, 0, 0.74);
 }
 
+.game {
+  text-align: center;
+}
+
+.chess {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 5px;
+}
+
 .board {
   width: 400px;
   margin: auto;
@@ -109,6 +123,72 @@ ol.log {
 .board.white-move, .board.white-move .square {
   -webkit-transform: rotate(0deg); 
   -moz-transform: rotate(0deg);
+}
+
+.chat {
+  vertical-align: top;
+  text-align: left;
+  display: inline-block;
+  width: 420px;
+  height: 420px;
+  overflow-y: scroll;
+  -webkit-box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  -moz-box-shadow:    0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  box-shadow:         0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  background-color: black;
+  margin-left: 5px;
+}
+
+.chat .chat-log ul {
+  background-color: black;
+  padding: 15px;
+  margin: 0;
+}
+
+.chat .chat-log ul h2 {
+  text-align: center;
+}
+
+.chat .chat-log ul li {
+  list-style-type: none;
+}
+
+.chat .chat-log ul li.server {
+  color: #555;
+}
+
+.chat .chat-log ul li span.player {
+  font-style: italic;
+}
+
+.chat form {
+  margin-top: 10px;
+}
+
+.chat form input[type='text'] {
+  width: 75%;
+  height: 25px;
+  padding-left: 10px;
+}
+
+.chat form a.send {
+  height: 28px;
+  line-height: 28px;
+  border: 1px solid white;
+  width: 15%;
+  margin-left: 5%;
+  text-align: center;
+  display: inline-block;
+  border-radius: 3px;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+.chat form a.send:hover {
+  background-color: white;
+  color: black !important;
 }
 
 .row {
@@ -222,6 +302,10 @@ ol.log {
 .possible-capture {
   background-color: blue !important;
   cursor: pointer;
+}
+
+#showChat {
+  display: none;
 }
 
 .board.black-move, .board.black-move .square {-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg);}
