@@ -1,10 +1,7 @@
 $(document).ready(function() {
 
-  dispatcher = new WebSocketRails('chess.joahg.com:3000/websocket');
-  var game_slug = window.location.pathname.split('/')[2];
-  var short_url = 'chs.xyz/' + game_slug;
-
-  $('#shortUrlField').html('<a href="http://' + short_url + '">' + short_url + '</a>');
+  dispatcher = new WebSocketRails('localhost:3000/websocket');
+  var game_slug = window.location.pathname.split('/')[1];
 
   dispatcher.on_open = function(data) {
     dispatcher.trigger('set_board', { slug: game_slug })

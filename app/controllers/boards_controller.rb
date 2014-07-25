@@ -6,7 +6,7 @@ class BoardsController < ApplicationController
     @chatlog.board_id = @board.id
     @chatlog.board_slug = @board.slug
     @chatlog.save
-    redirect_to '/b/' + @board.slug
+    redirect_to '/' + @board.slug
   end
 
   def show
