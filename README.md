@@ -1,6 +1,6 @@
 # chs.xyz
 
-Built off my [frontend Chess.js API](https://github.com/JoahG/chs.xyz/blob/gh-pages/js/chess.js) that I built while building Chess.
+Built off my [frontend Chess.js API](https://github.com/JoahG/chs.xyz/blob/gh-pages/js/chess.js).
 
 ## To play chess by yourself:
 
