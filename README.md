@@ -1,4 +1,4 @@
-# Chess.js
+# chs.xyz
 
 Built off my [frontend Chess.js API](https://github.com/JoahG/chs.xyz/blob/gh-pages/js/chess.js) that I built while building Chess.
 
@@ -8,7 +8,7 @@ Check out the [`gh-pages`](https://github.com/JoahG/chs.xyz/tree/gh-pages) branc
 
 ## To play chess with a friend:
 
-Everyone knows that playing chess with a friend is _way_ more fun than by yourself. To play with a friend, check out the more robust, Ruby On Rails-backed, websockets-enabled version in the [`master`](https://github.com/JoahG/chess.js/master) branch of this repo. It is also running at [chs.xyz](http://chs.xyz).
+Everyone knows that playing chess with a friend is _way_ more fun than by yourself. To play with a friend, check out the more robust, Ruby On Rails-backed, websockets-enabled version in the [`master`](https://github.com/JoahG/chs.xyz) branch of this repo. It is also running at [chs.xyz](http://chs.xyz).
 
 To play chess online with a friend, simply:
 
