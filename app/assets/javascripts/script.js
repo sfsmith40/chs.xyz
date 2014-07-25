@@ -107,6 +107,8 @@ $(document).ready(function() {
 
     $('.board').attr('class', 'board').addClass(player + '-move');
 
+    $('#playWithFairies').prop('checked', BoardObj.playing_with_fairies);
+
     $('.board .square').attr('class', 'square')
 
     $('.board .square').each(function() {
