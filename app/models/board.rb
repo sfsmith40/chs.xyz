@@ -5,9 +5,9 @@ class Board < ActiveRecord::Base
   has_one :chatlog
 
   def has_player_waiting
-    if self.has_white_player and !self.has_black_player
+    if self.has_white_player and !self.has_black_player and WebsocketRails.users[self.white_player]
       'black'
-    elsif self.has_black_player and !self.has_white_player
+    elsif self.has_black_player and !self.has_white_player and WebsocketRails.users[self.black_player]
       'white'
     else 
       false

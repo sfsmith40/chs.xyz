@@ -11,9 +11,13 @@ class SocketController < WebsocketRails::BaseController
 
   def client_connected
     puts "Client Connected #{client_id}"
+    WebsocketRails.users[client_id] = connection
+    puts connection.as_json
   end
 
   def client_disconnected
+    WebsocketRails.users[client_id] = nil
+
     @board = Board.find_by_slug(controller_store[:board_slug])
 
     if client_id == @board.white_player
