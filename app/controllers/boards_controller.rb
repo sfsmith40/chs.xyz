@@ -11,6 +11,8 @@ class BoardsController < ApplicationController
 
   def show
     @board = Board.find_by_slug(params[:id])
-    @board.save
+    if !@board
+      redirect_to root_url
+    end
   end
 end
