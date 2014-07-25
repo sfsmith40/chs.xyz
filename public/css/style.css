@@ -200,6 +200,13 @@ ol.log {
   display: inline;
 }
 
+.shortUrl {
+  margin-top: 30px;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
 .row {
   height: 50px;
   width: 400px;
