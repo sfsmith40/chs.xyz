@@ -1,5 +1,5 @@
 Chs::Application.routes.draw do
-  get '/:slug' => 'boards#show'
+  get '/b/:slug' => 'boards#show'
 
   get '/*path' => 'boards#index'
 
