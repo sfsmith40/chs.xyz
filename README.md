@@ -8,12 +8,12 @@ Check out the [`gh-pages`](https://github.com/JoahG/chess.js/tree/gh-pages) bran
 
 ## To play chess with a friend:
 
-Everyone knows that playing chess with a friend is _way_ more fun than by yourself. To play with a friend, check out the more robust, Ruby On Rails-backed, websockets-enabled version in the [`live-2p`](https://github.com/JoahG/chess.js/tree/live-2p) branch of this repo. It is also running at [chess.joahg.com](http://chess.joahg.com).
+Everyone knows that playing chess with a friend is _way_ more fun than by yourself. To play with a friend, check out the more robust, Ruby On Rails-backed, websockets-enabled version in the [`live-2p`](https://github.com/JoahG/chess.js/tree/live-2p) branch of this repo. It is also running at [chs.xyz](http://chs.xyz).
 
 To play chess online with a friend, simply:
 
-  1.   Goto [chess.joahg.com](http://chess.joahg.com).
-  2.   Grab the auto-generated URL (will be in the form of `chess.joahg.com/b/XYZ`).
+  1.   Goto [chs.xyz](http://chz.xyz).
+  2.   Grab the auto-generated URL (will be in the form of `chs.xyz/XYZ`).
   3.   Give that URL to your friend, and tell them to connect there.
   4.   When they connect, you're good to go!
 
