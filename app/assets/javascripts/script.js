@@ -209,6 +209,7 @@ $(document).ready(function() {
       $('.chat-log ul').prepend('<li class="chat-msg ' + msg.player + '"><span class="player">' + msg.player + '</span>&nbsp;: ' + msg.text + '</li>');
     }
     $('.chat-log ul').prepend('<h2>Chat</h2>')
+    $('.chat a:not(.send)').each(function() {$(this).attr('target', '_blank')})
     $('.chat').scrollTop($('.chat')[0].scrollHeight);
     $('#chatMsg').focus();
   }
