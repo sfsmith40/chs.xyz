@@ -1,8 +1,3 @@
-var BoardObj;
-var restore_state;
-var player;
-  var Turn;
-
 $(document).ready(function() {
 
   dispatcher = new WebSocketRails('chess.joahg.com:3000/websocket');
@@ -22,16 +17,15 @@ $(document).ready(function() {
       if (data.board == 'null') {
         dispatcher.trigger('update_board', { board: BoardObj.export() })
       } else {
-        b = data.board;
         restore_state(JSON.parse(JSON.parse(data.board)));
       }
     }
 
     if (data.has_partner !== undefined) {
       if (!data.has_partner) {
-        $('.connection').text('Waiting for opponent connection...');
+        $('.connection').html('Waiting for opponent connection...&nbsp;<a class="clickable" id="switchPlayer">Switch Player?</a>');
       } else if (data.has_partner) {
-        $('.connection').text('Connected!');
+        $('.connection').html('Connected!');
       }
     }
   });
@@ -40,19 +34,21 @@ $(document).ready(function() {
     window.location.href = window.location.origin;
   })
 
+  // dispatcher.bind('try_to_reconnect', function(data) {
+  //   dispatcher = new WebSocketRails('localhost:3000/websocket');
+  // })
+
   dispatcher.bind('player_connected', function(data) {
     if (data.slug == game_slug) {
       if (data.player !== player) {
-        $('.connection').text('Connected!');
+        $('.connection').html('Connected!');
       }
     }
   })
 
   dispatcher.bind('player_disconnected', function(data) {
     if (data.slug == game_slug) {
-      if (data.player !== player) {
-        $('.connection').text('Disconnected! Waiting for opponent connection...');
-      }
+      $('.connection').html('Disconnected! Waiting for opponent connection...&nbsp;<a class="clickable" id="switchPlayer">Switch Player?</a>');
     }
   })
 
@@ -62,12 +58,21 @@ $(document).ready(function() {
     }
   })
 
+  dispatcher.bind('switch_player', function(data) {
+    player = data.player;
+    restore_state(JSON.parse(JSON.parse(data.board)));
+  })
+
   $('.overlay#log').overlay();
   $('.overlay#opts').overlay();
   
   var White;
   var Black;
   var active_piece;
+  var BoardObj;
+  var restore_state;
+  var player;
+  var Turn;
   var h = 'abcdefgh'.split('');
   var v = '12345678'.split('');
   v.reverse();
@@ -198,7 +203,6 @@ $(document).ready(function() {
   reset();
 
   var update_chat = function(chatObj) {
-    console.log(chatObj)
     $('.chat .chat-msg, .chat h2').remove();
     for (var i = 0; i < chatObj.included_msgs.length; i += 1) {
       msg = chatObj.included_msgs[i];
@@ -222,6 +226,10 @@ $(document).ready(function() {
   $(document).on('click', '.chat a.send', function() {
     $('.chat form').submit();
   })
+
+  $(document).on('click', '#switchPlayer', function() {
+    dispatcher.trigger('switch_player');
+  });
 
   $(document).on('click', '.board .square.can-move:not(.possible-capture)', function() {
     active_piece = BoardObj.space_at(this.id).is_occupied;

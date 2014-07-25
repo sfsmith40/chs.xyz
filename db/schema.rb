@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140724185258) do
+ActiveRecord::Schema.define(version: 20140725132919) do
 
   create_table "boards", force: true do |t|
     t.string   "slug"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20140724185258) do
     t.datetime "updated_at"
     t.boolean  "has_white_player"
     t.boolean  "has_black_player"
+    t.string   "white_player"
+    t.string   "black_player"
   end
 
   create_table "chatlogs", force: true do |t|
