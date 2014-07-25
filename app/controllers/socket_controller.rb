@@ -43,6 +43,10 @@ class SocketController < WebsocketRails::BaseController
     @board.save
 
     if !@board.has_black_player and !@board.has_white_player
+      @gl = GameLog.new
+      @gl.log = JSON.parse(@board.board)['log'].to_json
+      @gl.save
+
       @board.destroy
     end
 

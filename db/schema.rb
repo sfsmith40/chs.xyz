@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140725132919) do
+ActiveRecord::Schema.define(version: 20140725223029) do
 
   create_table "boards", force: true do |t|
     t.string   "slug"
@@ -35,6 +35,12 @@ ActiveRecord::Schema.define(version: 20140725132919) do
     t.integer  "chatlog_id"
     t.string   "player"
     t.string   "text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "game_logs", force: true do |t|
+    t.text     "log"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
