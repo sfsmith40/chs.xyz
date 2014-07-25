@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  dispatcher = new WebSocketRails('localhost:3000/websocket');
+  dispatcher = new WebSocketRails('chs.xyz:3000/websocket');
   var game_slug = window.location.pathname.split('/')[1];
 
   dispatcher.on_open = function(data) {
