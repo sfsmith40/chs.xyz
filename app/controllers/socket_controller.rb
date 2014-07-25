@@ -167,4 +167,17 @@ class SocketController < WebsocketRails::BaseController
 
     send_message :switch_player, { :player => controller_store[:player], :board => @board.board.to_json }
   end
+
+  def toggle_fairies
+    @board = Board.find_by_slug(controller_store[:board_slug])
+
+    @msg = Chatmsg.new
+    @msg.chatlog_id = @board.chatlog.id
+    @msg.player = 'server'
+    @msg.text = message[:player] + ' turned ' + (message[:fairies] ? 'on' : 'off') + ' playing with fairies.'
+    @msg.save
+
+    broadcast_message :toggle_fairies,   { :slug => controller_store[:board_slug], fairies: message[:fairies]}
+    broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
+  end
 end

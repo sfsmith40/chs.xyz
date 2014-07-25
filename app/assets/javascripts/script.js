@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  dispatcher = new WebSocketRails('chess.joahg.com:3000/websocket');
+  dispatcher = new WebSocketRails('localhost:3000/websocket');
   var game_slug = window.location.pathname.split('/')[2];
 
   dispatcher.on_open = function(data) {
@@ -34,9 +34,12 @@ $(document).ready(function() {
     window.location.href = window.location.origin;
   })
 
-  // dispatcher.bind('try_to_reconnect', function(data) {
-  //   dispatcher = new WebSocketRails('localhost:3000/websocket');
-  // })
+  dispatcher.bind('toggle_fairies', function(data) {
+    if (data.slug == game_slug) {
+      $('#playWithFairies').prop('checked', data.fairies);
+      BoardObj.playing_with_fairies = data.fairies;
+    }
+  })
 
   dispatcher.bind('player_connected', function(data) {
     if (data.slug == game_slug) {
@@ -329,6 +332,7 @@ $(document).ready(function() {
 
     if (this.id == 'playWithFairies') {
       BoardObj.playing_with_fairies = $('input#playWithFairies').is(':checked');
+      dispatcher.trigger('toggle_fairies', { player: player, fairies: $('input#playWithFairies').is(':checked') });
     }
   })
 });
