@@ -18,4 +18,3 @@ To play chess online with a friend, simply:
   4.   When they connect, you're good to go!
 
 Since this is my first project involving Websockets, it is entirely possible that it is buggy, if so, feel free to email me (me@joahg.com), or to [open an issue](https://github.com/JoahG/chs.xyz/issues/new) to report it. Thanks!
-o report it. Thanks!chess.js/issues/new) to report it. Thanks!
