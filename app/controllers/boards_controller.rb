@@ -1,12 +1,6 @@
 class BoardsController < ApplicationController
   def index
-    @board = Board.new
-    @board.save
-    @chatlog = Chatlog.new
-    @chatlog.board_id = @board.id
-    @chatlog.board_slug = @board.slug
-    @chatlog.save
-    redirect_to '/' + @board.slug
+    @boards = Board.all.select { |b| b.has_player_waiting != false }
   end
 
   def show
@@ -14,5 +8,15 @@ class BoardsController < ApplicationController
     if !@board
       redirect_to root_url
     end
+  end
+
+  def new
+    @board = Board.new
+    @board.save
+    @chatlog = Chatlog.new
+    @chatlog.board_id = @board.id
+    @chatlog.board_slug = @board.slug
+    @chatlog.save
+    redirect_to '/' + @board.slug
   end
 end

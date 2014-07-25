@@ -1,0 +1,17 @@
+<div class="container">
+  <h1> <a href="/">chs.xyz</a> </h1>
+  <p class="tagline">Free Multiplayer Chess In Your Browser</p>
+
+  <h2>Lobby</h2>
+  <h4> Select a game from the list below, or create a <a href="/new">New Game</a></h4>
+
+  <ul class="game">
+    <% if @boards.length > 0 %>
+      <% @boards.each do |board| %>
+        <li><a href="/<%= board.slug %>"><%= board.slug %> - play as <%= board.has_player_waiting %></a></li>
+      <% end %>
+    <% else %>
+      <li> No available games at this time. <a href="/new">Click Here</a> to create a new game. </li>
+    <% end %>
+  </ul>
+</div>

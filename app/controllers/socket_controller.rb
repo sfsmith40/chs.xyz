@@ -38,6 +38,10 @@ class SocketController < WebsocketRails::BaseController
 
     @board.save
 
+    if !@board.has_black_player and !@board.has_white_player
+      @board.destroy
+    end
+
     # send_message :try_to_reconnect, {}
 
     broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
