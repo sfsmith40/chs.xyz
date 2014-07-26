@@ -111,10 +111,76 @@ ol.log {
   text-align: center;
 }
 
-ul.game {
+ul.lobby-list {
+  text-align: center;
   margin: 0;
   list-style-type: none;
   padding: 0;
+}
+
+ul.lobby-list li {
+  height: 200px;
+  border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  position: relative;
+}
+
+ul.lobby-list li .slug {
+  text-transform: uppercase;
+  font-size: 45px;
+  position:absolute;
+  bottom: 30px;
+  right: 17.5px;
+}
+
+ul.lobby-list li .tag {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+}
+
+ul.lobby-list li .icon {
+  position: absolute;
+  bottom: 20px;
+  right: 120px;
+  height: 50px;
+  width: 50px;
+  opacity: 0;
+  display:block;
+  -webkit-transition: opacity 0.3s ease-out;
+  -moz-transition:    opacity 0.3s ease-out;
+  -o-transition:      opacity 0.3s ease-out;
+  -ms-transition:     opacity 0.3s ease-out;
+  transition:         opacity 0.3s ease-out;
+}
+
+ul.lobby-list li.white, ul.lobby-list li.new {
+  border: 1px solid white;
+}
+
+ul.lobby-list li.black {
+  border: 1px solid black;
+}
+
+ul.lobby-list li.white:hover, ul.lobby-list li.new:hover {
+  background-color: white;
+  color: black;
+}
+
+ul.lobby-list li.black:hover {
+  background-color: black;
+  color: white;
+}
+
+ul.lobby-list li:hover .icon {
+  opacity: 1;
 }
 
 .chess {
@@ -131,7 +197,7 @@ ul.game {
   -moz-transition:    -moz-transform 0.3s ease-out;
   -o-transition:      -o-transform 0.3s ease-out;
   -ms-transition:     -ms-transform 0.3s ease-out;
-  transition:         transform 0.3s ease-out;-webkit-box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.74);
+  transition:         transform 0.3s ease-out;
   -webkit-box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.74);
   -moz-box-shadow:    0px 0px 12px 0px rgba(0, 0, 0, 0.74);
   box-shadow:         0px 0px 12px 0px rgba(0, 0, 0, 0.74);
@@ -197,6 +263,8 @@ ul.game {
   text-align: center;
   display: inline-block;
   border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
@@ -219,7 +287,7 @@ ul.game {
   text-align: center;
 }
 
-.row {
+.chess .board .row {
   height: 50px;
   width: 400px;
 }
@@ -230,19 +298,19 @@ ul.game {
   display: inline-block;
 }
 
-.row {
+.chess .board .row {
   background-color: #666;
 }
 
-.row .square:nth-child(2n) {
+.chess .board .row .square:nth-child(2n) {
   background-color: #333;
 }
 
-.row:nth-child(2n) {
+.chess .board .row:nth-child(2n) {
   background-color: #333;
 }
 
-.row:nth-child(2n) .square:nth-child(2n) {
+.chess .board .row:nth-child(2n) .square:nth-child(2n) {
   background-color: #666;
 }
 

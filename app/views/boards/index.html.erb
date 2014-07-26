@@ -1,19 +1,24 @@
 <div class="container">
   <h1> <a href="/">chs.xyz</a> </h1>
   <p class="tagline">Free Multiplayer Chess In Your Browser</p>
-
   <h2>Lobby</h2>
-  <h4> Select a game from the list below, or create a <a href="/new">New Game</a></h4>
+  <h4> The following games are waiting for opponents. <br>
+  Select a game below, or create a <a href="/new">New Game</a></h4>
 
-  <ul class="game">
-    <% if @boards.length > 0 %>
-      <% @boards.each do |board| %>
-        <li><a href="/<%= board.slug %>"><%= board.slug %> - play as <%= board.has_player_waiting %></a></li>
-      <% end %>
-    <% else %>
-      <li> No available games at this time. <a href="/new">Click Here</a> to create a new game. </li>
+  <ul class="lobby-list">
+    <% @boards.each do |board| %>
+      <a href="/<%= board.slug %>">
+        <li class="one-third column <%= board.has_player_waiting == 'white' ? 'black' : 'white' %>">
+          <span class="<%=board.has_player_waiting%>-knight icon"></span>
+          <span class="slug"><%= board.slug %></span>
+          <span class="tag">play as <%= board.has_player_waiting %></span>
+        </li>
+      </a>
     <% end %>
+    <a href="/new">
+      <li class="one-third column new">
+        <span class="tag">New Game</span>
+      </li>
+    </a>
   </ul>
-
-<%= WebsocketRails.users['38a1c1011c16b1db282c'] %>
 </div>
