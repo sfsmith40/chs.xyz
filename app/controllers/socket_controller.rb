@@ -192,4 +192,10 @@ class SocketController < WebsocketRails::BaseController
     broadcast_message :toggle_fairies,   { :slug => controller_store[:board_slug], fairies: message[:fairies]}
     broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
   end
+
+  def record_log
+    @gl = GameLog.new
+    @gl.log = message[:log]
+    @gl.save
+  end
 end

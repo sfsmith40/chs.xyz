@@ -150,12 +150,11 @@ $(document).ready(function() {
     if (k[0]) {
       White.in_check = true;
       $('.white-king').addClass('in-check');
-      $('.move').append(' white in check!');
 
       if (BoardObj.is_checkmate('white')) {
-        if (confirm('checkmate! black wins! play again?')) {
-          reset();
-        }
+        $('.move').html('checkmate! black wins! <a id="playAgain">play again?</a>');
+      } else {
+        $('.move').append(' white in check!');
       }
     } else {
       White.in_check = false;
@@ -165,12 +164,11 @@ $(document).ready(function() {
     if (k[1]) {
       Black.in_check = true;
       $('.black-king').addClass('in-check');
-      $('.move').append(' black in check!');
 
       if (BoardObj.is_checkmate('black')) {
-        if (confirm('checkmate! white wins! play again?')) {
-          reset();
-        }
+        $('.move').html('checkmate! white wins! <a id="playAgain">play again?</a>');
+      } else {
+        $('.move').append(' black in check!');
       }
     } else {
       Black.in_check = false;
@@ -236,6 +234,13 @@ $(document).ready(function() {
   $(document).on('click', '#switchPlayer', function() {
     dispatcher.trigger('switch_player');
   });
+
+  $(document).on('click', '#playAgain', function() {
+    dispatcher.trigger('record_log', { log: JSON.stringify(BoardObj.log) });
+    reset();
+    dispatcher.trigger('update_board', { board: BoardObj.export() });
+    dispatcher.trigger('new_chat_message', { player: 'server', text: player + ' has started a new game.' });
+  })
 
   $(document).on('click', '.board .square.can-move:not(.possible-capture)', function() {
     active_piece = BoardObj.space_at(this.id).is_occupied;
