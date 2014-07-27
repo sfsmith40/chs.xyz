@@ -280,6 +280,10 @@ ul.lobby-list li:hover .icon {
   display: inline;
 }
 
+.twt-space {
+  margin-top: 20px;
+}
+
 #playAgain {
   font-size: 0.75em;
   border: 1px solid white;
