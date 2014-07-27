@@ -280,11 +280,26 @@ ul.lobby-list li:hover .icon {
   display: inline;
 }
 
-.shortUrl {
-  margin-top: 30px;
-  display: block;
-  width: 100%;
-  text-align: center;
+#playAgain {
+  font-size: 0.75em;
+  border: 1px solid white;
+  padding-top: 5px;
+  padding-bottom: 7.5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-shadow: none;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 8px;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+#playAgain:hover {
+  background-color: white;
+  color: black !important;
 }
 
 .chess .board .row {
