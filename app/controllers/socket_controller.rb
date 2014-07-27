@@ -1,6 +1,5 @@
 require 'json'
 require 'redcarpet'
-
 class SocketController < WebsocketRails::BaseController
   include ActionView::Helpers::SanitizeHelper
 
@@ -12,7 +11,6 @@ class SocketController < WebsocketRails::BaseController
   def client_connected
     puts "Client Connected #{client_id}"
     WebsocketRails.users[client_id] = connection
-    puts connection.as_json
   end
 
   def client_disconnected
@@ -50,8 +48,6 @@ class SocketController < WebsocketRails::BaseController
       @board.destroy
     end
 
-    # send_message :try_to_reconnect, {}
-
     broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
 
     broadcast_message :player_disconnected, { :slug => controller_store[:board_slug], :player => controller_store[:player_color] }
@@ -62,6 +58,15 @@ class SocketController < WebsocketRails::BaseController
     @board = Board.find_by_slug(controller_store[:board_slug])
     has_partner = false
 
+    client = Twitter::REST::Client.new do |config|
+      config.consumer_key        = ENV['CONS_KEY']
+      config.consumer_secret     = ENV['CONS_KEY_SEC']
+      config.access_token        = ENV['ACC_TOK']
+      config.access_token_secret = ENV['ACC_TOK_SEC']
+    end
+
+    twt = "Want to play a game of chess? This game is looking for an opponent! http://chs.xyz/" + controller_store[:board_slug]
+
     if !@board.has_white_player && !@board.white_player
       controller_store[:player_color] = 'white'
       @board.white_player = client_id
@@ -69,6 +74,9 @@ class SocketController < WebsocketRails::BaseController
 
       if @board.has_black_player && @board.black_player
         has_partner = true
+        will_twt = false
+      else
+        will_twt = true
       end
 
       @msg = Chatmsg.new
@@ -84,6 +92,9 @@ class SocketController < WebsocketRails::BaseController
 
       if @board.has_white_player && @board.white_player
         has_partner = true
+        will_twt = false
+      else
+        will_twt = true
       end
 
       @msg = Chatmsg.new
@@ -103,6 +114,10 @@ class SocketController < WebsocketRails::BaseController
     broadcast_message :player_connected, { :slug => controller_store[:board_slug], :player => controller_store[:player_color] }
 
     send_message :update_board, { :slug => controller_store[:board_slug], :board => @board.board.to_json, :player => controller_store[:player_color], :has_partner => has_partner }
+    
+    if will_twt
+      client.update(twt)
+    end
   end
 
   def update_board
