@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  dispatcher = new WebSocketRails('localhost:3000/websocket');
+  dispatcher = new WebSocketRails('chs.xyz:3000/websocket');
 
   dispatcher.on_open = function(data) {
     dispatcher.trigger('open_lobby')
