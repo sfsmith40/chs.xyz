@@ -1,6 +1,6 @@
 require 'json'
 require 'redcarpet'
-class SocketController < WebsocketRails::BaseController
+class GameController < WebsocketRails::BaseController
   include ActionView::Helpers::SanitizeHelper
 
   def initialize_session

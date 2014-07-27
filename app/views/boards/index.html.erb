@@ -6,15 +6,17 @@
   Select a game below, or create a <a href="/new">New Game</a></h4>
 
   <ul class="lobby-list">
-    <% @boards.each do |board| %>
-      <a href="/<%= board.slug %>">
-        <li class="one-third column <%= board.has_player_waiting == 'white' ? 'black' : 'white' %>">
-          <span class="<%=board.has_player_waiting%>-knight icon"></span>
-          <span class="slug"><%= board.slug %></span>
-          <span class="tag">play as <%= board.has_player_waiting %></span>
-        </li>
-      </a>
-    <% end %>
+    <section class="live">
+      <% @boards.each do |board| %>
+        <a href="/<%= board.slug %>">
+          <li class="one-third column <%= board.has_player_waiting == 'white' ? 'black' : 'white' %>">
+            <span class="<%=board.has_player_waiting%>-knight icon"></span>
+            <span class="slug"><%= board.slug %></span>
+            <span class="tag">play as <%= board.has_player_waiting %></span>
+          </li>
+        </a>
+      <% end %>
+    </section>
     <a href="/new">
       <li class="one-third column new">
         <span class="tag">New Game</span>
@@ -26,3 +28,5 @@
 
   <h4 class="twt-space"> You can also follow @<a href="https://twitter.com/chsxyz">chsxyz</a> on Twitter for the latest available chess games to play on <a href="http://chs.xyz">chs.xyz</a>.</h4>
 </div>
+
+<%= javascript_include_tag "lobby" %>
