@@ -195,10 +195,15 @@ $(document).ready(function() {
       var sps = active_piece.possible_moves();
 
       for (var i = 0; i < sps[0].length; i += 1) {
-        $('.board .square#' + sps[0][i]).addClass('possible-move');
+        if (active_piece.can_move_to(sps[0][i])) {
+          $('.board .square#' + sps[0][i]).addClass('possible-move');
+
+        }
       }
       for (var i = 0; i < sps[1].length; i += 1) {
-        $('.board .square#' + sps[1][i]).addClass('possible-capture');
+        if (active_piece.can_move_to(sps[1][i])) {
+          $('.board .square#' + sps[1][i]).addClass('possible-capture');
+        }
       }
     }
   }

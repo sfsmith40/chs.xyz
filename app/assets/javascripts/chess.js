@@ -663,7 +663,6 @@ var Board = function() {
 
         return true;
       } else {
-        alert('in check. please select a different move.');
         return false;
       }
     }
@@ -820,8 +819,7 @@ var Board = function() {
       }
 
       if (!pieces_init) {
-        console.log('Please input the names of the colors of the armies.');
-        return;
+        return false;
       }
       for (var i = 0; i < pieces_init.length; i += 1) {
         p = pieces_init[i];
@@ -830,6 +828,7 @@ var Board = function() {
     };
 
     this.init();
+    return true;
   };
 
   this.space_at = function(coor) {
