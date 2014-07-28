@@ -1,8 +1,9 @@
-var Board = function() {
+var Board = function(move_callback) {
   this.spaces = new Array();
   this.turn = 'white';
   this.playing_with_fairies = false;
   this.log = [];
+  this.move_callback = (typeof move_callback == 'function' ? move_callback : undefined);
   var BoardObj = this;
 
   var Space = function(hor, ver, restore) {
@@ -539,12 +540,21 @@ var Board = function() {
       }
     }
 
-    this.can_move = function() { return this.possible_moves()[2].length > 0; };
+    this.can_move = function() { 
+      var ret = [];
+      var pm = this.possible_moves()[2];
+      for (var i = 0; i < pm.length; i += 1) {
+        if (this.can_move_to(pm[i], true)) {
+          ret.push(pm[i]);
+        }
+      }
+      return ret.length > 0; 
+    };
 
-    this.can_move_to = function(space) { 
+    this.can_move_to = function(space, bypass) { 
       var ret = false;
 
-      if (this.possible_moves()[2].indexOf(space) > -1) {
+      if (bypass || this.possible_moves()[2].indexOf(space) > -1) {
         ret = true;
 
         BoardObj.space_at(this.space).is_occupied = false;
@@ -625,7 +635,7 @@ var Board = function() {
         }
 
         if (castling) {
-          BoardObj.loggify({
+          var logObj = BoardObj.loggify({
             type: 'castle',
             side: castling,
             from: os,
@@ -636,7 +646,7 @@ var Board = function() {
             old_type: (old_type ? old_type : this.type)
           })
         } else if (is_cap) {
-          BoardObj.loggify({
+          var logObj = BoardObj.loggify({
             type: 'capture',
             from: os,
             to: ns,
@@ -647,7 +657,7 @@ var Board = function() {
             old_type: (old_type ? old_type : this.type)
           });
         } else {
-          BoardObj.loggify({
+          var logObj = BoardObj.loggify({
             type: 'move',
             from: os,
             to: ns,
@@ -659,10 +669,12 @@ var Board = function() {
         }
 
         BoardObj.turn = BoardObj.turn == 'white' ? 'black' : 'white';
+        if (move_callback) {
+          BoardObj.move_callback(logObj)
+        }
 
         return true;
       } else {
-        alert('in check. please select a different move.');
         return false;
       }
     }
@@ -819,8 +831,7 @@ var Board = function() {
       }
 
       if (!pieces_init) {
-        console.log('Please input the names of the colors of the armies.');
-        return;
+        return false;
       }
       for (var i = 0; i < pieces_init.length; i += 1) {
         p = pieces_init[i];
@@ -829,6 +840,7 @@ var Board = function() {
     };
 
     this.init();
+    return true;
   };
 
   this.space_at = function(coor) {
@@ -913,22 +925,24 @@ var Board = function() {
 
     if (obj.pawn_promotion) {
       if (obj.type == 'move') {
-        BoardObj.log.push([o + obj.to + '=' + p + t, obj])
+        var logObj = [o + obj.to + '=' + p + t, obj]
       } else if (obj.type == 'capture') {
         o = o == '' ? obj.from[0] : o;
-        BoardObj.log.push([o + 'x' + obj.to + '=' + p + t, obj])
+        var logObj = [o + 'x' + obj.to + '=' + p + t, obj]
       }
     } else {
       if (obj.type == 'move') {
-        BoardObj.log.push([p + obj.to + t, obj]);
+        var logObj = [p + obj.to + t, obj];
       } else if (obj.type == 'capture') {
         p = p == '' ? obj.from[0] : p;
-        BoardObj.log.push([p + 'x' + obj.to + t, obj])
+       var logObj = [p + 'x' + obj.to + t, obj]
       } else if (obj.type == 'castle') {
         p = 'O-O' + (obj.side == 'queenside' ? '-O' : '');
-        BoardObj.log.push([p, obj]);
+        var logObj = [p, obj];
       }
     }
+
+    BoardObj.log.push(logObj)
 
     if (BoardObj.is_checkmate((obj.piece.army == 'white' ? 'black' : 'white'))) {
       if (BoardObj.log.length % 2 == 1) {
@@ -941,6 +955,8 @@ var Board = function() {
         BoardObj.log.push(['0-1', obj]);
       }
     }
+
+    return logObj;
   }
 
   this.prev = function(p) {
