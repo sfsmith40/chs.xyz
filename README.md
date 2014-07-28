@@ -12,7 +12,7 @@ Everyone knows that playing chess with a friend is _way_ more fun than by yourse
 
 To play chess online with a friend, simply:
 
-  1.   Goto [chs.xyz](http://chz.xyz).
+  1.   Goto [chs.xyz](http://chs.xyz).
   2.   Grab the auto-generated URL (will be in the form of `chs.xyz/XYZ`).
   3.   Give that URL to your friend, and tell them to connect there.
   4.   When they connect, you're good to go!
