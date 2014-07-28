@@ -1,8 +1,9 @@
-var Board = function() {
+var Board = function(move_callback) {
   this.spaces = new Array();
   this.turn = 'white';
   this.playing_with_fairies = false;
   this.log = [];
+  this.move_callback = (typeof move_callback == 'function' ? move_callback : undefined);
   var BoardObj = this;
 
   var Space = function(hor, ver, restore) {
@@ -539,12 +540,21 @@ var Board = function() {
       }
     }
 
-    this.can_move = function() { return this.possible_moves()[2].length > 0; };
+    this.can_move = function() { 
+      var ret = [];
+      var pm = this.possible_moves()[2];
+      for (var i = 0; i < pm.length; i += 1) {
+        if (this.can_move_to(pm[i], true)) {
+          ret.push(pm[i]);
+        }
+      }
+      return ret.length > 0; 
+    };
 
-    this.can_move_to = function(space) { 
+    this.can_move_to = function(space, bypass) { 
       var ret = false;
 
-      if (this.possible_moves()[2].indexOf(space) > -1) {
+      if (bypass || this.possible_moves()[2].indexOf(space) > -1) {
         ret = true;
 
         BoardObj.space_at(this.space).is_occupied = false;
@@ -659,7 +669,9 @@ var Board = function() {
         }
 
         BoardObj.turn = BoardObj.turn == 'white' ? 'black' : 'white';
-        BoardObj.move_callback(logObj)
+        if (move_callback) {
+          BoardObj.move_callback(logObj)
+        }
 
         return true;
       } else {
@@ -997,11 +1009,6 @@ var Board = function() {
 
   this.export = function() {
     return JSON.stringify(this);
-  }
-
-  this.move_callback = function(obj) {
-    dispatcher.trigger('update_board', { board: BoardObj.export() })
-    dispatcher.trigger('new_chat_message', { player: 'server', text: obj[1].piece.army + ' made a move: ' + obj[0] });
   }
 
   this.init = function() {

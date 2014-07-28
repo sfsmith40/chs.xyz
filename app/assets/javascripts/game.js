@@ -79,6 +79,11 @@ $(document).ready(function() {
   var v = '12345678'.split('');
   v.reverse();
 
+  var move_callback = function(obj) {
+    dispatcher.trigger('update_board', { board: BoardObj.export() })
+    dispatcher.trigger('new_chat_message', { player: 'server', text: obj[1].piece.army + ' made a move: ' + obj[0] });
+  }
+
   var reset = function() {
     if ($('.board .square').length !== 64) {
       $('.chess').html('<div class="board"></div>')
@@ -93,11 +98,11 @@ $(document).ready(function() {
       }
     }
     
-    restore_state(new Board())
+    restore_state(new Board(move_callback))
   };
 
   restore_state = function(board) {
-    BoardObj = new Board();
+    BoardObj = new Board(move_callback);
     BoardObj.restore(board);
 
     White = BoardObj.white;
