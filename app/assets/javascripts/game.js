@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  dispatcher = new WebSocketRails('chs.xyz:3000/websocket');
+  dispatcher = new WebSocketRails('localhost:3000/websocket');
   var game_slug = window.location.pathname.split('/')[1];
 
   dispatcher.on_open = function(data) {
@@ -106,6 +106,12 @@ $(document).ready(function() {
     active_piece = undefined;
 
     $('.move').text(Turn + ' to move.');
+
+    if (Turn == player) {
+      $('title').text('Your Turn!');
+    } else {
+      $('title').text(Turn[0].toUpperCase() + Turn.substr(1, Turn.length - 1) + '\'s Turn');
+    }
 
     $('.board').attr('class', 'board').addClass(player + '-move');
 
