@@ -244,6 +244,10 @@ ul.lobby-list li:hover .icon {
   font-style: italic;
 }
 
+.chat img {
+  width: 100%;
+}
+
 .chat form {
   margin-top: 10px;
 }
