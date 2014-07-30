@@ -235,6 +235,8 @@ ul.lobby-list li:hover .icon {
 
 .chat .chat-log ul li {
   list-style-type: none;
+  position: relative;
+  margin-top: 11px;
 }
 
 .chat .chat-log ul li.server {
@@ -243,6 +245,13 @@ ul.lobby-list li:hover .icon {
 
 .chat .chat-log ul li span.player {
   font-style: italic;
+}
+
+.chat .chat-log ul li .time-stamp {
+  position: absolute;
+  top: -12px;
+  font-size: 0.7em;
+  color: #555;
 }
 
 .chat img {
@@ -422,6 +431,10 @@ ul.lobby-list li:hover .icon {
 .possible-capture {
   background-color: blue !important;
   cursor: pointer;
+}
+
+.last-moved {
+  background-color: green !important;
 }
 
 #showChat {

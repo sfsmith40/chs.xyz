@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  dispatcher = new WebSocketRails('chs.xyz:3000/websocket');
+  dispatcher = new WebSocketRails('localhost:3000/websocket');
   var game_slug = window.location.pathname.split('/')[1];
 
   dispatcher.on_open = function(data) {
@@ -187,6 +187,7 @@ $(document).ready(function() {
 
     $('.log').html('');
     if (BoardObj.log.length > 0) {
+      $('.board .square#' + BoardObj.log[BoardObj.log.length-1][1]['to']).addClass('last-moved')
       for (var i = 0; i < BoardObj.log.length; i += 2) {
         $('.log').append('<li>' + BoardObj.log[i][0] + (BoardObj.log[i+1] ? ' ' + BoardObj.log[i+1][0] : '') + '</li>');
       }
@@ -223,8 +224,10 @@ $(document).ready(function() {
   var update_chat = function(chatObj) {
     $('.chat .chat-msg, .chat h2').remove();
     for (var i = 0; i < chatObj.included_msgs.length; i += 1) {
-      msg = chatObj.included_msgs[i];
-      $('.chat-log ul').prepend('<li class="chat-msg ' + msg.player + '"><span class="player">' + msg.player + '</span>&nbsp;: ' + msg.text + '</li>');
+      var msg = chatObj.included_msgs[i];
+      var date = new Date(msg.created_at);
+      date = (date.getMonth() + 1).toString() + '/' + (date.getDate()).toString() + '/' + (date.getFullYear()).toString() + ' ' + (date.getHours()).toString() + ':' + (date.getMinutes()).toString() + ':' + (date.getSeconds()).toString();
+      $('.chat-log ul').prepend('<li class="chat-msg ' + msg.player + '"><span class="time-stamp">[' + date + ']</span><span class="player">' + msg.player + '</span>&nbsp;: ' + msg.text + '</li>');
     }
     $('.chat-log ul').prepend('<h2>Chat</h2>')
     $('.chat a:not(.send)').each(function() {$(this).attr('target', '_blank')})
