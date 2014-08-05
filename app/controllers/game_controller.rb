@@ -208,6 +208,14 @@ class GameController < WebsocketRails::BaseController
     broadcast_message :new_chat_message, { :slug => controller_store[:board_slug], :log => @board.chatlog.to_json(:include => :included_msgs) }
   end
 
+  def kill_game
+    @board = Board.find_by_slug(message[:slug])
+    @gl = GameLog.new
+    @gl.log = JSON.parse(@board.board)['log'].to_json
+    @gl.save
+    @board.destroy
+  end
+
   def record_log
     @gl = GameLog.new
     @gl.log = message[:log]

@@ -6,10 +6,12 @@ WebsocketRails::EventMap.describe do
   subscribe :new_chat_message, :to => GameController, :with_method => :new_chat_message
   subscribe :switch_player, :to => GameController, :with_method => :switch_player
   subscribe :toggle_fairies, :to => GameController, :with_method => :toggle_fairies
+  subscribe :kill_game, :to => GameController, :with_method => :kill_game
   subscribe :record_log, :to => GameController, :with_method => :record_log
 
   subscribe :open_lobby, :to => LobbyController, :with_method => :update
   subscribe :set_board, to: LobbyController, with_method: :update
   subscribe :client_disconnected, :to => LobbyController, :with_method => :update
+  subscribe :kill_game, :to => LobbyController, :with_method => :update
   subscribe :switch_player, :to => LobbyController, :with_method => :update
 end

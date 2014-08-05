@@ -423,6 +423,10 @@ ul.lobby-list li:hover .icon {
   cursor: pointer;
 }
 
+.last-moved {
+  background-color: yellow !important;
+}
+
 .possible-move {
   background-color: red !important;
   cursor: pointer;
@@ -431,10 +435,6 @@ ul.lobby-list li:hover .icon {
 .possible-capture {
   background-color: blue !important;
   cursor: pointer;
-}
-
-.last-moved {
-  background-color: green !important;
 }
 
 #showChat {
