@@ -1,6 +1,12 @@
 $(document).ready(function() {
   dispatcher = new WebSocketRails(window.location.host.split(':')[0] + ':3000/websocket');
   var game_slug = window.location.pathname.split('/')[1];
+  var window_is_active = true;
+  var unread_msgs = 0;
+  var title_text = '';
+  var flasher;
+  var title_text_temp = '';
+
 
   dispatcher.on_open = function(data) {
     dispatcher.trigger('set_board', { slug: game_slug })
@@ -56,7 +62,12 @@ $(document).ready(function() {
 
   dispatcher.bind('new_chat_message', function(data) {
     if (data.slug == game_slug) {
-      update_chat(JSON.parse(data.log));
+      var d = JSON.parse(data.log);
+      update_chat(d);
+      if (!window_is_active && d.included_msgs[0].player !== 'server') {
+        unread_msgs += 1;
+        update_title();
+      }
     }
   })
 
@@ -64,6 +75,23 @@ $(document).ready(function() {
     player = data.player;
     restore_state(JSON.parse(JSON.parse(data.board)));
   })
+
+  $(window).focus(function() {
+    window_is_active = true;
+    unread_msgs = 0;
+    update_title();
+    clearInterval(flasher);
+  });
+
+  $(window).blur(function() {
+    window_is_active = false;
+  });
+
+  var update_title = function(msg) {
+    msg = msg || title_text;
+    title_text = msg;
+    $('title').text(msg + (!window_is_active && unread_msgs > 0 ? ' (' + unread_msgs.toString() + ')' : ''));
+  }
 
   $('.overlay#log').overlay();
   $('.overlay#opts').overlay();
@@ -113,9 +141,19 @@ $(document).ready(function() {
     $('.move').text(Turn + ' to move.');
 
     if (Turn == player) {
-      $('title').text('Your Turn!');
+      update_title('Your Turn!')
+      if (!window_is_active) {
+        flasher = setInterval(function() {
+          if ($('title').text().length > 0) {
+            title_text_temp = $('title').text();
+            $('title').text('');
+          } else {
+            $('title').text(title_text_temp);
+          }
+        }, 10);
+      }
     } else {
-      $('title').text(Turn[0].toUpperCase() + Turn.substr(1, Turn.length - 1) + '\'s Turn');
+      update_title(Turn[0].toUpperCase() + Turn.substr(1, Turn.length - 1) + '\'s Turn');
     }
 
     $('.board').attr('class', 'board').addClass(player + '-move');
