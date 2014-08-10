@@ -18,7 +18,7 @@
       <% end %>
     </section>
     <a href="/new">
-      <li class="one-third column new">
+      <li class="one-third column new  <%= (@boards.length == 0 ? 'offset-by-one-third' : '' ) %>">
         <span class="tag">New Game</span>
       </li>
     </a>

@@ -68,6 +68,9 @@
     .container .offset-by-thirteen              { padding-left: 780px; }
     .container .offset-by-fourteen              { padding-left: 840px; }
     .container .offset-by-fifteen               { padding-left: 900px; }
+    
+    .container .offset-by-one-third             { margin-left: 308px; }
+    .container .offset-by-two-thirds            { margin-left: 640px; }
 
 
 

@@ -15,6 +15,12 @@ $(document).ready(function() {
       $('.live').append('<a href="/' + b.slug + '"><li class="one-third column ' + (b.has_white_player ? 'white' : 'black') + '"><span class="' + (b.has_white_player ? 'black' : 'white') + '-knight icon"></span><span class="slug">' + b.slug + '</span><span class="tag">play as ' + (b.has_white_player ? 'black' : 'white') + '</span></li></a>')
     }
 
+    if (boards.length > 0) {
+      $('.new').removeClass('offset-by-one-third');
+    } else {
+      $('.new').addClass('offset-by-one-third');
+    }
+
 
     $('title').text('chs.xyz ' + (boards.length > 0 ? '(' + boards.length + ')' : ''));
   })
