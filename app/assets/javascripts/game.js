@@ -413,7 +413,5 @@ $(document).ready(function() {
         return "Leaving now will delete the game.";
       }
     }
-
-
   }
 });
