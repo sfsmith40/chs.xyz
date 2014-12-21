@@ -6,6 +6,8 @@ $(document).ready(function() {
   var title_text = '';
   var flasher;
   var title_text_temp = '';
+  var opponent_connected;
+  var game_loaded = false;
 
 
   dispatcher.on_open = function(data) {
@@ -20,16 +22,20 @@ $(document).ready(function() {
 
     if (data.slug == game_slug) {
       if (data.board == 'null') {
-        dispatcher.trigger('update_board', { board: BoardObj.export() })
+        dispatcher.trigger('update_board', { board: BoardObj.export() });
+        game_loaded = false;
       } else {
         restore_state(JSON.parse(JSON.parse(data.board)));
+        game_loaded = true;
       }
     }
 
     if (data.has_partner !== undefined) {
       if (!data.has_partner) {
+        opponent_connected = false;
         $('.connection').html('Waiting for opponent connection...&nbsp;<a class="clickable" id="switchPlayer">Switch Player?</a>');
       } else if (data.has_partner) {
+        opponent_connected = true;
         $('.connection').html('Connected!');
       }
     }
@@ -49,6 +55,7 @@ $(document).ready(function() {
   dispatcher.bind('player_connected', function(data) {
     if (data.slug == game_slug) {
       if (data.player !== player) {
+        opponent_connected = true;
         $('.connection').html('Connected!');
       }
     }
@@ -56,6 +63,7 @@ $(document).ready(function() {
 
   dispatcher.bind('player_disconnected', function(data) {
     if (data.slug == game_slug) {
+      opponent_connected = false;
       $('.connection').html('Disconnected! Waiting for opponent connection...&nbsp;<a class="clickable" id="switchPlayer">Switch Player?</a>');
     }
   })
@@ -396,4 +404,16 @@ $(document).ready(function() {
       dispatcher.trigger('toggle_fairies', { player: player, fairies: $('input#playWithFairies').is(':checked') });
     }
   })
+
+  window.onbeforeunload = function() {
+    if (game_loaded) {
+      if (opponent_connected) {
+        return "Leaving this page will leave your opponent without a challenger.";
+      } else if (!opponent_connected) {
+        return "Leaving now will delete the game.";
+      }
+    }
+
+
+  }
 });
